@@ -12,7 +12,7 @@
 <script
    src="https://map.vworld.kr/js/map/OpenLayers-2.13/OpenLayers-2.13.js"></script>
 <script
-   src="https://map.vworld.kr/js/apis.do?type=Base&apiKey=인증키"></script>
+   src="https://map.vworld.kr/js/apis.do?type=Base&apiKey="></script>
 
 <script>
    var map;
