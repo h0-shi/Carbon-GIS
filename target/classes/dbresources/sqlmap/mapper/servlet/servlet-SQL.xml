@@ -2,14 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="servlet">
 
-	<select id="serVletTest" resultType="EgovMap">
-		<![CDATA[
-			SELECT 
-				FILENAME, FILEREALNAME
-			FROM
-				UPLOAD
-			WHERE
-				1=1
-		]]>
+	<select id="sidonm" resultType="servletVo">
+		SELECT DISTINCT sidonm FROM public.taf
 	</select>
 </mapper>
