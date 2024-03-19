@@ -35,11 +35,11 @@
             url : 'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
             params : {
                'VERSION' : '1.1.0', // 2. 버전
-               'LAYERS' : 'Project:sig', // 3. 작업공간:레이어 명
-               'BBOX' : '1.3868781374824677E7,3902016.156987171,1.468860911029592E7,4666807.560402363', 
+               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
+               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
                'SRS' : 'EPSG:3857', // SRID
-               'FORMAT' : 'image/png', // 포맷
-           	   'CQL_FILTER' : '${zip}'
+               'FORMAT' : "image/png", // 포맷
+           	   'CQL_FILTER' : "${zip}"
             },
             serverType : 'geoserver',
          })
@@ -75,8 +75,9 @@
       <form action="./main.do" method="get">
 	      <select id="location" name="zip">
 	      	<option value="">기본</option>
-	      	<option value="43750,43770,43130,43150,43800,43760,43745,43114,43113,43112,43111,43720,43730,43740">충북</option>
-	      	<option value="southchoong">충남</option>
+	      	<c:forEach items="${list}" var="row">
+	      	<option value="${row.sidonm}">${row.sidonm}</option>
+	      	</c:forEach>
 	      </select>
 	      <button type="submit">선택</button>
       </form>

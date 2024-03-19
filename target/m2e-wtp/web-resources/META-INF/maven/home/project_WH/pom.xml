@@ -55,6 +55,15 @@
     </repositories>
 
 	<dependencies>
+	
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <version>1.18.28</version>
+		    <scope>provided</scope>
+		</dependency>
+		
 		<!-- 표준프레임워크 실행환경 -->
         <dependency>
 		    <groupId>egovframework.rte</groupId>
