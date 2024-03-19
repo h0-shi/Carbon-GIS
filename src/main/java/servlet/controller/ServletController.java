@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import servlet.service.ServletService;
 
@@ -15,11 +16,11 @@ public class ServletController {
 	private ServletService servletService;
 	
 	@RequestMapping(value = "/main.do")
-	public String mainTest(ModelMap model) throws Exception {
-		System.out.println("sevController.java - mainTest()");
-		String str = servletService.addStringTest("START! ");
-		System.out.println("메인");
-		model.addAttribute("resultStr", str);
+	public String mainTest(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
+		if(zip.length()>1) {
+			zip = "SIG_CD IN ("+zip+")";
+		}
+		model.addAttribute("zip",zip);
 		return "main/main";
 	}
 	

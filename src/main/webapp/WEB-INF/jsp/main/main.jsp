@@ -14,17 +14,12 @@
 <script>
    $(document).ready(function() {
 	   
-	   $('#location').on('change',function(){
-		  let code = $("#location option:selected").text;
-		  alert(code);
-	   });
-	   
       let map = new ol.Map({ // OpenLayer의 맵 객체를 생성한다.
           target: 'map', // 맵 객체를 연결하기 위한 target으로 <div>의 id값을 지정해준다.
           layers: [ // 지도에서 사용 할 레이어의 목록을 정희하는 공간이다.
             new ol.layer.Tile({
               source: new ol.source.OSM({
-            	  url: 'http://api.vworld.kr/req/wmts/1.0.0/{key}}/Base/{z}/{y}/{x}.png'   
+            	  url: 'http://api.vworld.kr/req/wmts/1.0.0/{key}/Base/{z}/{y}/{x}.png'   
                       // vworld의 지도를 가져온다.
               })
             })
@@ -44,7 +39,7 @@
                'BBOX' : '1.3868781374824677E7,3902016.156987171,1.468860911029592E7,4666807.560402363', 
                'SRS' : 'EPSG:3857', // SRID
                'FORMAT' : 'image/png', // 포맷
-           	   'CQL_FILTER' : 'SIG_CD IN (43750,43770,43130,43150,43800,43760,43745,43114,43113,43112,43111,43720,43730,43740)'
+           	   'CQL_FILTER' : '${zip}'
             },
             serverType : 'geoserver',
          })
@@ -75,12 +70,16 @@
       <!-- 실제 지도가 표출 될 영역 -->
    </div>
    <div>
+   <p>${zip }
       <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
-      <select id="location">
-      	<option value="">기본</option>
-      	<option value="43750,43770,43130,43150,43800,43760,43745,43114,43113,43112,43111,43720,43730,43740">충북</option>
-      	<option value="southchoong">충남</option>
-      </select>
+      <form action="./main.do" method="get">
+	      <select id="location" name="zip">
+	      	<option value="">기본</option>
+	      	<option value="43750,43770,43130,43150,43800,43760,43745,43114,43113,43112,43111,43720,43730,43740">충북</option>
+	      	<option value="southchoong">충남</option>
+	      </select>
+	      <button type="submit">선택</button>
+      </form>
    </div>
 </body>
 </html>
