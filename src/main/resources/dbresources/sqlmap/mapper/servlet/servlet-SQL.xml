@@ -3,6 +3,6 @@
 <mapper namespace="servlet">
 
 	<select id="sidonm" resultType="servletVo">
-		SELECT DISTINCT sidonm FROM public.taf
+		SELECT DISTINCT sidonm FROM public."Loc_Name"
 	</select>
 </mapper>

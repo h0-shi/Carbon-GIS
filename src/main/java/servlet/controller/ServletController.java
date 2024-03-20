@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,18 +27,25 @@ public class ServletController {
 			zip = "sd_nm='"+zip+"'";
 		}
 		model.addAttribute("zip",zip);
-		System.out.println("?!");
-		System.out.println(sidonm);
-		for (ServletVO servletVO : sidonm) {
-			System.out.println(servletVO.getSidonm());
-		}
 		model.addAttribute("list",sidonm);
 		return "main/main";
 	}
 	
+	@RequestMapping(value = "/hover.do")
+	@CrossOrigin(origins = "*", allowedHeaders =  "*")
+	public String hover(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
+		List<ServletVO> sidonm = servletService.sidonm();
+		
+		if(zip.length()>1) {
+			zip = "sd_nm='"+zip+"'";
+		}
+		model.addAttribute("zip",zip);
+		model.addAttribute("list",sidonm);
+		return "main/hover";
+	}
+	
 	@RequestMapping(value="/mapTest.do")
 	public String layer() {
-		System.out.println("레이어");
 		return "main/mapTest";
 	}
 }

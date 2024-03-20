@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Alias("servletVO")
-@Getter
-@Setter
 public class ServletVO {
 
 	private String sidonm;
@@ -19,5 +17,5 @@ public class ServletVO {
 	public void setSidonm(String sidonm) {
 		this.sidonm = sidonm;
 	}
-	
+
 }

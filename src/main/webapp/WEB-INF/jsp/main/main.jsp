@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
    pageEncoding="UTF-8"%>
-   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -9,8 +9,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>브이월드 오픈API</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.15.1/build/ol.js"></script>
-<link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/ol@v6.15.1/ol.css">
+<script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
+<link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <script>
    $(document).ready(function() {
 	   
@@ -19,7 +19,7 @@
           layers: [ // 지도에서 사용 할 레이어의 목록을 정희하는 공간이다.
             new ol.layer.Tile({
               source: new ol.source.OSM({
-            	  url: 'http://api.vworld.kr/req/wmts/1.0.0/{key}/Base/{z}/{y}/{x}.png'   
+            	  url: 'http://api.vworld.kr/req/wmts/1.0.0/key/Base/{z}/{y}/{x}.png'   
                       // vworld의 지도를 가져온다.
               })
             })
@@ -76,7 +76,7 @@
 	      <select id="location" name="zip">
 	      	<option value="">기본</option>
 	      	<c:forEach items="${list}" var="row">
-	      	<option value="${row.sidonm}">${row.sidonm}</option>
+	      	<option value="${row.sidonm}" >${row.sidonm}</option>
 	      	</c:forEach>
 	      </select>
 	      <button type="submit">선택</button>
