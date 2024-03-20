@@ -11,6 +11,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
+
 <script>
    $(document).ready(function() {
 	   
@@ -26,8 +27,14 @@
 		            url : 'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 		            params : {
 		               'VERSION' : '1.1.0', // 2. 버전
+		               <c:if test="${size eq 'sd'}">
+		               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
+		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997', 
+		               </c:if>
+		               <c:if test="${size eq 'sgg'}">
 		               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+		               </c:if>
 		               'SRS' : 'EPSG:3857', // SRID
 		               'FORMAT' : "image/png", // 포맷
 		           		'CQL_FILTER' : "${zip}"
@@ -52,27 +59,24 @@
 		    var url =  source.getGetFeatureInfoUrl(
 		    		 evt.coordinate, viewResolution, view.getProjection(), {
 		    	            'INFO_FORMAT': 'application/json',
-		    	            'propertyName': 'sgg_nm',
 		    	            'FEATURE_COUNT': 50
 		    	        });
-		    console.log("--top--");
-		    console.log(url);
-		    console.log("--bot--");
 		    if (url) {
 		        fetch(url).then(function(response) {
 		        	response.text().then(function(text){
-						console.log(text);
-						console.log("*-----*");
 						var jsonObj = JSON.parse(text);
-						console.log(jsonObj);
-						console.log(jsonObj.features[0].properties.sgg_nm);
-						var sgg = jsonObj.features[0].properties.sgg_nm;
-						$("#selectedLoc").text("선택한 위치 : "+sgg);
+						<c:if test="${size eq 'sd'}">
+						var ele = jsonObj.features[0].properties.sd_nm;
+						</c:if>
+						<c:if test="${size eq 'sgg'}">
+						var ele = jsonObj.features[0].properties.sgg_nm;
+						</c:if>
+						$("#selectedLoc").text("선택한 위치 : "+ele);
 		        	})
 		        });
 		    }
 		});
-		
+		//포인터 무브 도전중
 		 var selectPointerMove = new ol.interaction.Select({
 	            condition: ol.events.condition.pointerMove,
 	            style: new ol.style.Style({
@@ -114,8 +118,18 @@
    <div id="selectedLoc">
    선택한 위치 : 
    </div>
+   	
    <div>
       <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
+      
+      <form action="./hover.do" action="get">
+      <select name="size">
+      	<option value="sd">시/도</option>
+      	<option value="sgg">시군구</option>
+      </select>
+      <button type="submit">범례변경</button>
+      </form>
+      
       <form action="./hover.do" method="get">
 	      <select id="location" name="zip">
 	      	<option value="">기본</option>

@@ -33,12 +33,14 @@ public class ServletController {
 	
 	@RequestMapping(value = "/hover.do")
 	@CrossOrigin(origins = "*", allowedHeaders =  "*")
-	public String hover(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
+	public String hover(ModelMap model, @RequestParam(name="zip",defaultValue = "", required = false) String zip, @RequestParam(name="size",required = false, defaultValue = "sd") String size) throws Exception {
 		List<ServletVO> sidonm = servletService.sidonm();
 		
 		if(zip.length()>1) {
 			zip = "sd_nm='"+zip+"'";
 		}
+		System.out.println(size);
+		model.addAttribute("size",size);
 		model.addAttribute("zip",zip);
 		model.addAttribute("list",sidonm);
 		return "main/hover";
