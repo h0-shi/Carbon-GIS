@@ -40,13 +40,16 @@ public class ServletController {
 	
 	@GetMapping("/hover.do")
 	@CrossOrigin(origins = "*", allowedHeaders =  "*")
-	public String hover(ModelMap model, @RequestParam(name="sd",defaultValue = "", required = false) String sd, @RequestParam(name="size",required = false, defaultValue = "sd") String size) throws Exception {
+	public String hover(ModelMap model,@RequestParam(name="sgg", defaultValue = "", required = false) String sgg_nm, @RequestParam(name="sd",defaultValue = "", required = false) String sd, @RequestParam(name="size",required = false, defaultValue = "sd") String size) throws Exception {
 		List<ServletVO> sidonm = servletService.sidonm();
 		if(sd.length()>0) {
-			System.out.println(sd);
 			List<ServletVO> sgg = servletService.sgg(sd);
 			model.addAttribute("sgg",sgg);
-			sd = "sd_nm='"+sd+"'";
+			if(sgg_nm.length()>0) {
+				sd = "sgg_nm='"+sd+" "+sgg_nm+"'";
+			} else {
+				sd = "sd_nm='"+sd+"'";
+			}
 		}
 		model.addAttribute("size",size);
 		model.addAttribute("sd",sd);
@@ -56,8 +59,12 @@ public class ServletController {
 	
 	@ResponseBody
 	@PostMapping("/hover.do")
-	public List<ServletVO> hover(String sd, HttpServletResponse res) throws IOException {
+	public List<ServletVO> hover(String sd, String sggSel, HttpServletResponse res) throws IOException {
 		List<ServletVO> sgg = servletService.sgg(sd);
+		if(sggSel != null) {
+			List<ServletVO> bjd = servletService.bjd(sggSel);
+			return bjd;
+		}
 		return sgg;
 	}
 	

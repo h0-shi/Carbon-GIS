@@ -32,4 +32,10 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	public List<ServletVO> sgg(String sd) {
 		return dao.sgg(sd);
 	}
+
+	@Override
+	public List<ServletVO> bjd(String sggSel) {
+		return dao.bjd(sggSel);
+	}
+
 }

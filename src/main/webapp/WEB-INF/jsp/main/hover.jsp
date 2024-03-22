@@ -30,7 +30,7 @@
    $(document).ready(function() {
 	   
 	   var source = new ol.source.XYZ({
-		    url: 'http://api.vworld.kr/req/wmts/1.0.0/17/key/Base/{z}/{y}/{x}.png'
+		    url: 'http://api.vworld.kr/req/wmts/1.0.0//Base/{z}/{y}/{x}.png'
 		});
 		var viewLayer = new ol.layer.Tile({
 		    source: source
@@ -45,10 +45,18 @@
 		               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997', 
 		               </c:if>
+		               
 		               <c:if test="${size eq 'sgg'}">
 		               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
 		               </c:if>
+		               
+		               <c:if test="${size eq 'bjd'}">
+		               'LAYERS' : 'Project:tl_bjd', // 3. 작업공간:레이어 명
+		               'BBOX' : '1.3873946E7,3906626.5,1.4428045E7,4670269.5', 
+		               </c:if>
+		               
+		               
 		               'SRS' : 'EPSG:3857', // SRID
 		               'FORMAT' : "image/png", // 포맷
 		           		'CQL_FILTER' : "${sd}"
@@ -85,15 +93,18 @@
 						<c:if test="${size eq 'sgg'}">
 						var ele = jsonObj.features[0].properties.sgg_nm;
 						</c:if>
+						<c:if test="${size eq 'bjd'}">
+						var ele = jsonObj.features[0].properties.bjd_nm;
+						</c:if>
 						$("#selectedLoc").text("선택한 위치 : "+ele);
 		        	})
 		        });
 		    }
 		});
 		
-		$("#update").submit(function(){
-			var size = $("#size option:selected").val();
-			var sgg = $("#location option:selected").val();
+		$("#size").on('change',function(){
+			var size = $("#size").val();
+			//나중에 범례 지정에 따라 드롭다운 뜨게 하자
 		});
 		
 		$("#location").on('change',function(){
@@ -108,9 +119,36 @@
 				dataType : 'json',
 				success: function(result){
 					sgg.empty();
+					var all = $("<option value=''>전체보기</option>");
+					sgg.append(all);
 					for (var i = 0; i < result.length; i++) {
 						var option = $("<option>"+result[i].sgg_nm+"</option>");
 						sgg.append(option);
+					}
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
+				}
+			});
+		});
+		
+		$("#sgg").on('change',function(){
+			
+			var sgg = $("#sgg option:selected");
+			var bjd = $("#bjd");
+			
+			$.ajax({
+				url: "./hover.do",
+				type: "post",
+				data: {'sggSel' : sgg.val()},
+				dataType : 'json',
+				success: function(result){
+					bjd.empty();
+					var all = $("<option value=''>전체보기</option>");
+					bjd.append(all);
+					for (var i = 0; i < result.length; i++) {
+						var option = $("<option>"+result[i].bjd_nm+"</option>");
+						bjd.append(option);
 					}
 				},
 				error: function(request, status, error){ //통신오류
@@ -140,7 +178,11 @@
 	      	<option value="sgg"
 	      	<c:if test="${param.size eq 'sgg' }">selected="selected"</c:if>
 	      	>시군구</option>
+	      	<option value="bjd"
+	      	<c:if test="${param.size eq 'bjd' }">selected="selected"</c:if>
+	      	>법정동</option>
 	    </select>
+	    
 	    <select id="location" name="sd">
 	    	<option value="">전체보기</option>
 	    	<c:forEach items="${list}" var="row">
@@ -149,11 +191,22 @@
 	    	>${row.sd_nm}</option>
 	    	</c:forEach>
 	    </select>
-	    <select id="sgg">
-	    <c:forEach items="${sgg }" var="row">
-	    	<option>${row.sgg_nm}</option>
-	    </c:forEach>
-	    </select>
+	    
+		    <select id="sgg" name="sgg">
+		    	<option value="">전체보기</option>
+		    <c:forEach items="${sgg }" var="row">
+		    	<option value="${row.sgg_nm}">${row.sgg_nm}</option>
+		    </c:forEach>
+		    </select>
+		 
+	    <c:if test="${param.size eq 'bjd' }">
+		    <select id="bjd">
+		    	<option value="">전체보기</option>
+		    <c:forEach items="${bjd }" var="row">
+		    	<option value="${row.bjd_nm}">${row.bjd_nm}</option>
+		    </c:forEach>
+		    </select>
+	    </c:if>
 	    <button type="submit">선택</button>
       </form>
    </div>

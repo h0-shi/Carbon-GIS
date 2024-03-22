@@ -10,4 +10,6 @@ public interface ServletService {
 	List<ServletVO> sidonm();
 
 	List<ServletVO> sgg(String sd);
+
+	List<ServletVO> bjd(String sggSel);
 }
