@@ -3,6 +3,10 @@
 <mapper namespace="servlet">
 
 	<select id="sidonm" resultType="servletVo">
-		SELECT DISTINCT sidonm FROM public."Loc_Name"
+		SELECT DISTINCT sd_nm FROM public.total ORDER BY sd_nm
+	</select>
+	
+	<select id="sgg" resultType="servletVo" parameterType="String">
+		SELECT DISTINCT sgg_nm FROM public.total WHERE sd_nm=#{sd } ORDER BY sgg_nm
 	</select>
 </mapper>

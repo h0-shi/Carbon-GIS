@@ -8,4 +8,6 @@ public interface ServletService {
 	String addStringTest(String str) throws Exception;
 
 	List<ServletVO> sidonm();
+
+	List<ServletVO> sgg(String sd);
 }

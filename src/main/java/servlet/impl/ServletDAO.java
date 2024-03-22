@@ -23,4 +23,8 @@ public class ServletDAO extends EgovComAbstractDAO {
 		return selectList("servlet.sidonm");
 	}
 
+	public List<ServletVO> sgg(String sd) {
+		return selectList("servlet.sgg", sd);
+	}
+
 }

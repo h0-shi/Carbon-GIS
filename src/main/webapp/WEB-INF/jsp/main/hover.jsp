@@ -11,12 +11,26 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
+<style>
+    .map {
+      height: 600px;
+      width: 100%;
+    }
+    
+    .olControlAttribution {
+        right: 20px;
+    }
 
+    .olControlLayerSwitcher {
+        right: 20px;
+        top: 20px;
+    }
+</style>
 <script>
    $(document).ready(function() {
 	   
 	   var source = new ol.source.XYZ({
-		    url: 'http://api.vworld.kr/req/wmts/1.0.0/key/Base/{z}/{y}/{x}.png'
+		    url: 'http://api.vworld.kr/req/wmts/1.0.0/17/key/Base/{z}/{y}/{x}.png'
 		});
 		var viewLayer = new ol.layer.Tile({
 		    source: source
@@ -37,14 +51,14 @@
 		               </c:if>
 		               'SRS' : 'EPSG:3857', // SRID
 		               'FORMAT' : "image/png", // 포맷
-		           		'CQL_FILTER' : "${zip}"
+		           		'CQL_FILTER' : "${sd}"
 		            },
 		            serverType : 'geoserver',
 		         })
 		});
 		var view = new ol.View({
-		    center: [14377556.389982047, 4186024.063626864],
-		    zoom: 14,
+			center: ol.proj.fromLonLat([128.4, 35.7]),
+            zoom: 7
 		});
 		var mapView = new ol.Map({
 		            target: "map",
@@ -76,40 +90,37 @@
 		        });
 		    }
 		});
-		//포인터 무브 도전중
-		 var selectPointerMove = new ol.interaction.Select({
-	            condition: ol.events.condition.pointerMove,
-	            style: new ol.style.Style({
-	                stroke: new ol.style.Stroke({
-	                    color: 'white',
-	                    width: 2
-	                }),
-	                fill: new ol.style.Fill({
-	                    color: 'rgba(0,0,255,0.6)'
-	                })
-	            })
-	        });
-	        // interaction 추가
-	        map.addInteraction(selectPointerMove);
+		
+		$("#update").submit(function(){
+			var size = $("#size option:selected").val();
+			var sgg = $("#location option:selected").val();
+		});
+		
+		$("#location").on('change',function(){
+			
+			var sd = $("#location option:selected");
+			var sgg = $("#sgg");
+			
+			$.ajax({
+				url: "./hover.do",
+				type: "post",
+				data: {'sd' : sd.val()},
+				dataType : 'json',
+				success: function(result){
+					sgg.empty();
+					for (var i = 0; i < result.length; i++) {
+						var option = $("<option>"+result[i].sgg_nm+"</option>");
+						sgg.append(option);
+					}
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
+				}
+			});
+		});
 		
    });
 </script>
-
-<style>
-    .map {
-      height: 600px;
-      width: 100%;
-    }
-    
-    .olControlAttribution {
-        right: 20px;
-    }
-
-    .olControlLayerSwitcher {
-        right: 20px;
-        top: 20px;
-    }
-</style>
 </head>
 <body>
    <div id="map" class="map">
@@ -121,23 +132,29 @@
    	
    <div>
       <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
-      
-      <form action="./hover.do" action="get">
-      <select name="size">
-      	<option value="sd">시/도</option>
-      	<option value="sgg">시군구</option>
-      </select>
-      <button type="submit">범례변경</button>
-      </form>
-      
-      <form action="./hover.do" method="get">
-	      <select id="location" name="zip">
-	      	<option value="">기본</option>
-	      	<c:forEach items="${list}" var="row">
-	      	<option value="${row.sidonm}">${row.sidonm}</option>
-	      	</c:forEach>
-	      </select>
-	      <button type="submit">선택</button>
+      <form action="./hover.do" action="post">
+      	<select name="size" id="size"  onchange="getSgg();">
+	      	<option value="sd"
+	      	<c:if test="${param.size eq 'sd' }">selected="selected"</c:if>
+	      	>시/도</option>
+	      	<option value="sgg"
+	      	<c:if test="${param.size eq 'sgg' }">selected="selected"</c:if>
+	      	>시군구</option>
+	    </select>
+	    <select id="location" name="sd">
+	    	<option value="">전체보기</option>
+	    	<c:forEach items="${list}" var="row">
+	    	<option value="${row.sd_nm}"
+	    	<c:if test="${row.sd_nm eq param.sd }">selected="selected"</c:if>
+	    	>${row.sd_nm}</option>
+	    	</c:forEach>
+	    </select>
+	    <select id="sgg">
+	    <c:forEach items="${sgg }" var="row">
+	    	<option>${row.sgg_nm}</option>
+	    </c:forEach>
+	    </select>
+	    <button type="submit">선택</button>
       </form>
    </div>
 </body>

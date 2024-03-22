@@ -76,7 +76,7 @@
 	      <select id="location" name="zip">
 	      	<option value="">기본</option>
 	      	<c:forEach items="${list}" var="row">
-	      	<option value="${row.sidonm}" >${row.sidonm}</option>
+	      	<option value="${row.sd_nm}" >${row.sd_nm}</option>
 	      	</c:forEach>
 	      </select>
 	      <button type="submit">선택</button>

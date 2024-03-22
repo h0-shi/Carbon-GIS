@@ -27,4 +27,9 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	public List<ServletVO> sidonm() {
 		return dao.sidonm();
 	}
+
+	@Override
+	public List<ServletVO> sgg(String sd) {
+		return dao.sgg(sd);
+	}
 }
