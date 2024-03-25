@@ -29,25 +29,19 @@
 <script>
    $(document).ready(function() {
 	   
-	   let map = new ol.Map({
-		   target: 'map', // 맵 객체를 연결하기 위한 target으로 <div>의 id값을 지정해준다.
-		    layers: [ // 지도에서 사용 할 레이어의 목록을 정희하는 공간이다.
-		      new ol.layer.Tile({
-		        source: new ol.source.OSM({
-		          url: 'http://api.vworld.kr/req/wmts/1.0.0/${key}/Base/{z}/{y}/{x}.png' // vworld의 지도를 가져온다.
-		        })
-		      })
-		    ],
-		    view: new ol.View({ // 지도가 보여 줄 중심좌표, 축소, 확대 등을 설정한다. 보통은 줌, 중심좌표를 설정하는 경우가 많다.
-		      center: ol.proj.fromLonLat([128.4, 35.7]),
-		      zoom: 7
-		    })
-	   });
-	   
+	   var temp;
+		   
+	   var source = new ol.source.XYZ({
+		    url: 'http://api.vworld.kr/req/wmts/1.0.0/${key}/Base/{z}/{y}/{x}.png'
+		});
+		var viewLayer = new ol.layer.Tile({
+		    source: source
+		});
 		var wms = new ol.layer.Tile({
-			source : new ol.source.TileWMS({
-				url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
-				 params : {
+		    visible: true,
+		   source : new ol.source.TileWMS({
+		            url : 'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+		            params : {
 		               'VERSION' : '1.1.0', // 2. 버전
 		               <c:if test="${size eq 'sd'}">
 		               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
@@ -65,19 +59,27 @@
 		               </c:if>
 		               
 		               'SRS' : 'EPSG:3857', // SRID
-		               'FORMAT' : "image/png" // 포맷
+		               'FORMAT' : "image/png", // 포맷
+		           		'CQL_FILTER' : temp
 		            },
 		            serverType : 'geoserver',
 		         })
 		});
 		
-		map.addLayer(wms); // 맵 객체에 레이어를 추가함
+		var view = new ol.View({
+			center: ol.proj.fromLonLat([128.4, 35.7]),
+            zoom: 7
+		});
+		var mapView = new ol.Map({
+		            target: "map",
+		            layers: [viewLayer, wms],
+		            view: view
+		});
 		
-		map.on('singleclick', function(evt) {
-		    var view = map.getView();
+		mapView.on('singleclick', function(evt) {
+		    var view = mapView.getView();
 		    var viewResolution = view.getResolution();
 		    var source = wms.getSource();
-		    var ele;
 		    var url =  source.getGetFeatureInfoUrl(
 		    		 evt.coordinate, viewResolution, view.getProjection(), {
 		    	            'INFO_FORMAT': 'application/json',
@@ -94,56 +96,40 @@
 						var ele = jsonObj.features[0].properties.sgg_nm;
 						</c:if>
 						<c:if test="${size eq 'bjd'}">
-						ele = jsonObj.features[0].properties.bjd_nm;
+						var ele = jsonObj.features[0].properties.bjd_nm;
 						</c:if>
 						$("#selectedLoc").text("선택한 위치 : "+ele);
-					   	
-
-						var styles = [
-							new ol.style.Style({
-								stroke: new ol.style.Stroke({
-								color: '#fc8d16',
-								width: 6,
-										}),
-									})
-								];
-						
-						var colorWms = new ol.layer.Tile({
-							source : new ol.source.TileWMS({
-								url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
-								params : {
-						               'VERSION' : '1.1.0', // 2. 버전
-						               'STYLES' : 'simple_roads', // 2. 버전
-						               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
-						               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
-						               'SRS' : 'EPSG:3857', // SRID
-						               'FORMAT' : "image/png", // 포맷
-						               'CQL_FILTER' : "sd_nm='경기도'"
-						            },
-						            serverType : 'geoserver'
-						         })
-						});
-						
-						map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
-						
 		        	})
-		        	
 		        });
 		    }
-		    
-		    
-		    
+		});
+		
+		$("#size").on('change',function(){
+			var size = $("#size").val();
+			//나중에 범례 지정에 따라 드롭다운 뜨게 하자
 		});
 		
 		$("#location").on('change',function(){
-			//var param = "sd_nm='"+$(this).val()+"'";
-			var sd = $(this).val();
+			
+			var sd = $("#location option:selected");
 			var sgg = $("#sgg");
+			
+			//mapView.removeLayer(wms);
+
+			temp = "sd_nm='"+$(this).val()+"'";
+			alert(temp);
+			
+			wms.mergeNewParams({            
+				CQL_FILTER: "sd_nm='"+$(this).val()+"'"
+			});
+			wms.redraw(true);
+			//mapView.addLayer(wms);
+			
 			
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
-				data: {'sd' : sd},
+				data: {'sd' : sd.val()},
 				dataType : 'json',
 				success: function(result){
 					sgg.empty();
@@ -158,43 +144,17 @@
 					alert("에러 발생");
 				}
 			});
-			
-			$.ajax({
-				url: "./getCenter.do",
-				type: "post",
-				data: {'filter' : sd, 'type':'sd'},
-				dataType : 'json',
-				success: function(result){
-					var center = [result.x, result.y];
-					map.getView().setCenter(center);
-					if(sd.match('특별')||sd.match('광역')){
-						map.getView().setZoom(10);
-					} else {
-						map.getView().setZoom(9);
-					}
-				},
-				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
-				}
-			});
 		});
 		
 		$("#sgg").on('change',function(){
 			
-			var sd = $(this).siblings('#location').val();
-			var sgg = $(this).val();
+			var sgg = $("#sgg option:selected");
 			var bjd = $("#bjd");
-			var filter;
-			
-			if(sgg.length > 0){
-				filter = sd+' '+sgg;
-			}
-			
 			
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
-				data: {'sggSel' : sgg },
+				data: {'sggSel' : sgg.val()},
 				dataType : 'json',
 				success: function(result){
 					bjd.empty();
@@ -209,23 +169,13 @@
 					alert("에러 발생");
 				}
 			});
-			
-			$.ajax({
-				url: "./getCenter.do",
-				type: "post",
-				data: {'filter' : filter , 'type':'sgg'},
-				dataType : 'json',
-				success: function(result){
-					var center = [result.x, result.y];
-					map.getView().setCenter(center);
-					map.getView().setZoom(11.5);
-				},
-				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
-				}
-			});
-		})
-	
+		});
+		$("#delLayer").click(function(){
+			mapView.removeLayer(wms);
+		});
+		$("#addLayer").click(function(){
+			mapView.addLayer(wms);
+		});
    });
 </script>
 </head>

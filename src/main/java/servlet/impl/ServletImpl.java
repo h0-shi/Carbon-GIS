@@ -1,6 +1,7 @@
 package servlet.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -36,6 +37,11 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	@Override
 	public List<ServletVO> bjd(String sggSel) {
 		return dao.bjd(sggSel);
+	}
+
+	@Override
+	public Map<String, Double> center(Map<String, String> where) {
+		return dao.center(where);
 	}
 
 }

@@ -17,4 +17,22 @@
 	<select id="bjd" resultType="servletVo" parameterType="String">
 		SELECT DISTINCT bjd_nm FROM public."Loc_Name" WHERE sgg_nm=#{sgg } ORDER BY bjd_nm
 	</select>
+	
+	<select id="center" resultType="HashMap" parameterType="Map">
+	SELECT st_x(st_centroid(geom)) as x, st_y(st_centroid(geom)) as y 
+	<if test='type.equals("sd") ' >
+		FROM public.tl_sd
+	</if>
+	<if test='type.equals("sgg") ' >
+		FROM public.tl_sgg
+	</if>
+	<where>
+		<if test='type.equals("sd") ' >
+			sd_nm = #{filter}
+		</if>
+		<if test='type.equals("sgg") ' >
+			sgg_nm = #{filter}
+		</if>
+	</where>
+	</select>
 </mapper>

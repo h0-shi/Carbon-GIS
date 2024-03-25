@@ -1,6 +1,7 @@
 package servlet.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,10 @@ public class ServletDAO extends EgovComAbstractDAO {
 
 	public List<ServletVO> bjd(String sgg) {
 		return selectList("servlet.bjd",sgg);
+	}
+
+	public Map<String, Double> center(Map<String, String> where) {
+		return session.selectOne("servlet.center",where);
 	}
 
 }
