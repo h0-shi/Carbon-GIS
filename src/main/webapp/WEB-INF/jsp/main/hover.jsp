@@ -30,7 +30,7 @@
    $(document).ready(function() {
 	   
 	   var source = new ol.source.XYZ({
-		    url: 'http://api.vworld.kr/req/wmts/1.0.0//Base/{z}/{y}/{x}.png'
+		    url: 'http://api.vworld.kr/req/wmts/1.0.0/${key}/Base/{z}/{y}/{x}.png'
 		});
 		var viewLayer = new ol.layer.Tile({
 		    source: source

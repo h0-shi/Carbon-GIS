@@ -1,13 +1,12 @@
 package servlet.controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import servlet.service.ServletService;
+import servlet.util.Key;
 import servlet.vo.ServletVO;
 
 @Controller
@@ -25,6 +25,9 @@ public class ServletController {
 	
 	@Resource(name = "ServletService")
 	private ServletService servletService;
+	
+	@Autowired
+	private Key util;
 	
 	@RequestMapping(value = "/main.do")
 	public String mainTest(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
@@ -34,6 +37,7 @@ public class ServletController {
 			zip = "sd_nm='"+zip+"'";
 		}
 		model.addAttribute("zip",zip);
+		//model.addAttribute("key",util.getKey());
 		model.addAttribute("list",sidonm);
 		return "main/main";
 	}
@@ -51,8 +55,10 @@ public class ServletController {
 				sd = "sd_nm='"+sd+"'";
 			}
 		}
+		System.out.println(util.getKey());
 		model.addAttribute("size",size);
 		model.addAttribute("sd",sd);
+		model.addAttribute("key",util.getKey());
 		model.addAttribute("list",sidonm);
 		return "main/hover";
 	}
