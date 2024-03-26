@@ -112,7 +112,7 @@
 						var coordinate = evt.coordinate;
 						const div = $('.ol-overlay-container');
 						if(div.length>0){
-						//	div.remove();
+							div.remove();
 						}
 						
 						let content = document.createElement("div");
