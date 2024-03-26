@@ -165,6 +165,13 @@
 			var sd = $(this).val();
 			var sgg = $("#sgg");
 			
+			if(sd.length < 1){
+				var center = ol.proj.fromLonLat([128.4, 35.7]);
+				map.getView().setCenter(center);
+				map.getView().setZoom(7)
+				return false;
+			}
+			
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
@@ -172,7 +179,7 @@
 				dataType : 'json',
 				success: function(result){
 					sgg.empty();
-					var all = $("<option value=''>전체보기</option>");
+					var all = $("<option value='all'>전체보기</option>");
 					sgg.append(all);
 					for (var i = 0; i < result.length; i++) {
 						var option = $("<option value="+result[i].sgg_nm+">"+result[i].sgg_nm+"</option>");
@@ -180,7 +187,7 @@
 					}
 				},
 				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
+					console.log('drop다운 에러');
 				}
 			});
 			// 시,도 중심 좌표값 가져옴
@@ -199,7 +206,7 @@
 					}
 				},
 				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
+					console.log('중심좌표 가져오기 에러');
 				}
 				
 			});
