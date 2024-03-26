@@ -55,13 +55,13 @@
 				 params : {
 		               'VERSION' : '1.1.0', // 2. 버전
 		               <c:if test="${size eq 'sd'}">
-		               'LAYERS' : 'Project:sd_c1', // 3. 작업공간:레이어 명
+		               'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997', 
 		               </c:if>
 		               
 		               <c:if test="${size eq 'sgg'}">
-		               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+		               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
+		               'BBOX' : '1.3871489329746835E7,3910407.083927817,1.46800091844669E7,4666488.829376992', 
 		               </c:if>
 		               
 		               <c:if test="${size eq 'bjd'}">
@@ -112,7 +112,7 @@
 						var coordinate = evt.coordinate;
 						const div = $('.ol-overlay-container');
 						if(div.length>0){
-							div.remove();
+						//	div.remove();
 						}
 						
 						let content = document.createElement("div");
@@ -127,9 +127,6 @@
 						overlay.setPosition(coordinate);
 						//지도에 추가
 						map.addOverlay(overlay);
-						
-						const div2 = $('.ol-overlay-container').text();
-						
 						
 						/*
 						싱글클릭
