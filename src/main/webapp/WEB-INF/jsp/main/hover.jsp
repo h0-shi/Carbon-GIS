@@ -25,6 +25,8 @@
         right: 20px;
         top: 20px;
     }
+    
+    
 </style>
 <script>
    $(document).ready(function() {
@@ -50,7 +52,7 @@
 				 params : {
 		               'VERSION' : '1.1.0', // 2. 버전
 		               <c:if test="${size eq 'sd'}">
-		               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
+		               'LAYERS' : 'Project:sd_c1', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997', 
 		               </c:if>
 		               
@@ -71,7 +73,7 @@
 		         })
 		});
 		
-	//	map.addLayer(wms); // 맵 객체에 레이어를 추가함
+		map.addLayer(wms); // 맵 객체에 레이어를 추가함
 		var selectedLayer;
 	
 	// 지도 클릭시 정보 가져옴
@@ -92,16 +94,33 @@
 		        	response.text().then(function(text){
 						var jsonObj = JSON.parse(text);
 						<c:if test="${size eq 'sd'}">
-						var ele = jsonObj.features[0].properties.sd_nm;
+							ele = jsonObj.features[0].properties.sd_nm;
 						</c:if>
 						<c:if test="${size eq 'sgg'}">
-						var ele = jsonObj.features[0].properties.sgg_nm;
+							ele = jsonObj.features[0].properties.sgg_nm;
 						</c:if>
 						<c:if test="${size eq 'bjd'}">
-						ele = jsonObj.features[0].properties.bjd_nm;
+							ele = jsonObj.features[0].properties.bjd_nm;
 						</c:if>
-						$("#selectedLoc").text("선택한 위치 : "+ele);
+						var usage = jsonObj.features[0].properties.usage;
+						$("#selectedLoc").text("선택한 위치 : "+ele+" | "+"사용량 : "+usage);
 					   
+						let container = document.createElement('div');
+						container.classList.add('ol-popup-custom');
+						let content = document.createElement('div');
+						content.classList.add('popup-content');
+						
+						container.appendChild(content);
+						document.body.appendChild(container);
+						
+						var coordinate = evt.coordinate;
+						content.innerHTML = '<span>'+"사용량 : "+usage+'</span>';
+						var overlay = new Overlay({
+							element: container,
+						});
+						map.addOverlay(overlay);
+						//overlay.setPosition(coordinate);
+						
 						/*
 						싱글클릭
 						var colorWms = new ol.layer.Tile({
@@ -182,7 +201,7 @@
 					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 					params : {
 			               'VERSION' : '1.1.0', // 2. 버전
-			               'STYLES' : 'simple_roads ', // 2. 버전
+			               'STYLES' : 'line ', // 2. 버전
 			               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
 			               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
 			               'SRS' : 'EPSG:3857', // SRID
@@ -239,7 +258,7 @@
 				success: function(result){
 					var center = [result.x, result.y];
 					map.getView().setCenter(center);
-					map.getView().setZoom(15);
+					map.getView().setZoom(12);
 				},
 				error: function(request, status, error){ //통신오류
 					alert("에러 발생");
@@ -255,7 +274,7 @@
       <!-- 실제 지도가 표출 될 영역 -->
    </div>
    <div id="selectedLoc">
-   선택한 위치 : 
+   선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
    </div>
    	
    <div>
