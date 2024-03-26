@@ -25,7 +25,10 @@
         right: 20px;
         top: 20px;
     }
-    
+	.pop{
+		background-color: white;
+	}    
+
     
 </style>
 <script>
@@ -104,22 +107,29 @@
 						</c:if>
 						var usage = jsonObj.features[0].properties.usage;
 						$("#selectedLoc").text("선택한 위치 : "+ele+" | "+"사용량 : "+usage);
-					   
-						let container = document.createElement('div');
-						container.classList.add('ol-popup-custom');
-						let content = document.createElement('div');
-						content.classList.add('popup-content');
 						
-						container.appendChild(content);
-						document.body.appendChild(container);
-						
+						//오버레이 생성
 						var coordinate = evt.coordinate;
-						content.innerHTML = '<span>'+"사용량 : "+usage+'</span>';
-						var overlay = new Overlay({
-							element: container,
+						const div = $('.ol-overlay-container');
+						if(div.length>0){
+							div.remove();
+						}
+						
+						let content = document.createElement("div");
+						content.classList.add('ol-popup','pop');
+						
+						
+						content.innerHTML = '<span> 사용량 : '+usage+'</span>';
+						let overlay = new ol.Overlay({
+						       element: content, // 생성한 DIV
 						});
+						//오버레이의 위치 저장
+						overlay.setPosition(coordinate);
+						//지도에 추가
 						map.addOverlay(overlay);
-						//overlay.setPosition(coordinate);
+						
+						const div2 = $('.ol-overlay-container').text();
+						
 						
 						/*
 						싱글클릭
