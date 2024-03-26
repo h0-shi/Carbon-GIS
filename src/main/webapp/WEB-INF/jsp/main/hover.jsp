@@ -71,10 +71,12 @@
 		         })
 		});
 		
-		map.addLayer(wms); // 맵 객체에 레이어를 추가함
+	//	map.addLayer(wms); // 맵 객체에 레이어를 추가함
 		var selectedLayer;
+	
+	// 지도 클릭시 정보 가져옴
 		map.on('singleclick', function(evt) {
-			map.removeLayer(selectedLayer);
+			//map.removeLayer(selectedLayer);
 			
 		    var view = map.getView();
 		    var viewResolution = view.getResolution();
@@ -99,23 +101,15 @@
 						ele = jsonObj.features[0].properties.bjd_nm;
 						</c:if>
 						$("#selectedLoc").text("선택한 위치 : "+ele);
-					   	
-
-						var styles = [
-							new ol.style.Style({
-								stroke: new ol.style.Stroke({
-								color: '#fc8d16',
-								width: 6,
-										}),
-									})
-								];
-						
+					   
+						/*
+						싱글클릭
 						var colorWms = new ol.layer.Tile({
 							source : new ol.source.TileWMS({
 								url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 								params : {
 						               'VERSION' : '1.1.0', // 2. 버전
-						               'STYLES' : 'line', // 2. 버전
+						               'STYLES' : 'line ', // 2. 버전
 						               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
 						               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
 						               'SRS' : 'EPSG:3857', // SRID
@@ -127,7 +121,7 @@
 						});
 						selectedLayer = colorWms;
 						map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
-						
+						*/
 		        	})
 		        	
 		        });
@@ -152,7 +146,7 @@
 					var all = $("<option value=''>전체보기</option>");
 					sgg.append(all);
 					for (var i = 0; i < result.length; i++) {
-						var option = $("<option value='result[i].sgg_nm'>"+result[i].sgg_nm+"</option>");
+						var option = $("<option value="+result[i].sgg_nm+">"+result[i].sgg_nm+"</option>");
 						sgg.append(option);
 					}
 				},
@@ -160,7 +154,7 @@
 					alert("에러 발생");
 				}
 			});
-			
+			// 시,도 중심 좌표값 가져옴
 			$.ajax({
 				url: "./getCenter.do",
 				type: "post",
@@ -170,7 +164,7 @@
 					var center = [result.x, result.y];
 					map.getView().setCenter(center);
 					if(sd.match('특별')||sd.match('광역')){
-						map.getView().setZoom(10);
+						map.getView().setZoom(11);
 					} else {
 						map.getView().setZoom(9);
 					}
@@ -178,9 +172,32 @@
 				error: function(request, status, error){ //통신오류
 					alert("에러 발생");
 				}
+				
 			});
+			map.removeLayer(selectedLayer);
+			
+			//coloerd Border 레이어 생성
+			var colorWms = new ol.layer.Tile({
+				source : new ol.source.TileWMS({
+					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					params : {
+			               'VERSION' : '1.1.0', // 2. 버전
+			               'STYLES' : 'simple_roads ', // 2. 버전
+			               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
+			               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+			               'SRS' : 'EPSG:3857', // SRID
+			               'FORMAT' : "image/png", // 포맷
+			               'CQL_FILTER' : "sd_nm='"+sd+"'"
+			            },
+			            serverType : 'geoserver'
+			         })
+			});
+			selectedLayer = colorWms;
+			map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
+			
 		});
 		
+		//시군구 변경시 법정동 가져옴
 		$("#sgg").on('change',function(){
 			
 			var sd = $(this).siblings('#location').val();
@@ -192,7 +209,7 @@
 				filter = sd+' '+sgg;
 			}
 			
-			
+			//리스트 출력
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
@@ -212,6 +229,8 @@
 				}
 			});
 			
+			// 지도 중심으로 이동
+			
 			$.ajax({
 				url: "./getCenter.do",
 				type: "post",
@@ -220,7 +239,7 @@
 				success: function(result){
 					var center = [result.x, result.y];
 					map.getView().setCenter(center);
-					map.getView().setZoom(11.5);
+					map.getView().setZoom(15);
 				},
 				error: function(request, status, error){ //통신오류
 					alert("에러 발생");
