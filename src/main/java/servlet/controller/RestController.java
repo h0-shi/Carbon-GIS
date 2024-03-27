@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import servlet.service.ServletService;
 import servlet.vo.ServletVO;
@@ -41,9 +43,11 @@ public class RestController {
 		return center;
 	}
 	
-	@PostMapping("/color.do")
-	public String color(String filter) {
-		
+	@PostMapping("/test.do")
+	public String test(MultipartHttpServletRequest request) {
+		MultipartFile file = request.getFile("file1");
+		String name = request.getParameter("name");
+		System.out.println(name);
 		return null;
 	}
 	

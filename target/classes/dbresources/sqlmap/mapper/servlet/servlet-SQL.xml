@@ -3,19 +3,19 @@
 <mapper namespace="servlet">
 
 	<select id="sidonm" resultType="servletVo">
-		SELECT DISTINCT sd_nm FROM public."Loc_Name" 
+		SELECT DISTINCT sd_nm FROM public."Location_C1" 
 		WHERE sd_nm is not null
 		ORDER BY sd_nm
 	</select>
 	
 	<select id="sgg" resultType="servletVo" parameterType="String">
-		SELECT DISTINCT sgg_nm FROM public."Loc_Name" 
-		WHERE sd_nm=#{sd } AND	sgg_nm is not null
+		SELECT DISTINCT sgg_nm FROM public."Location_C1" 
+		WHERE sd_nm=#{sd } AND sgg_nm is not null
 		ORDER BY sgg_nm
 	</select>
 	
 	<select id="bjd" resultType="servletVo" parameterType="String">
-		SELECT DISTINCT bjd_nm FROM public."Loc_Name" WHERE sgg_nm=#{sgg } ORDER BY bjd_nm
+		SELECT bjd_nm FROM public."Location_C1" WHERE sgg_nm=#{sgg } ORDER BY bjd_nm
 	</select>
 	
 	<select id="center" resultType="HashMap" parameterType="Map">

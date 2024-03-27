@@ -55,6 +55,13 @@
     </repositories>
 
 	<dependencies>
+		<!-- 파일 업로드 -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+		
 		<!-- 24.03.22 JSON -->
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
