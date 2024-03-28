@@ -57,10 +57,11 @@ public class RestController {
 		
 		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
 
-		String aLine = "";
+		String aLine = null;
 		while((aLine = bf.readLine()) != null) {
+			Map<String, String> map = new HashMap<String, String>();
 			String[] arr = aLine.split("\\|");
-		    Map<String, String> map = new HashMap<String, String>();
+			
 		    map.put("useDate", arr[0]);
 //		    map.put("mtLoc", arr[1]);
 //		    map.put("rdLoc", arr[2]);
