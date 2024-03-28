@@ -44,4 +44,9 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 		return dao.center(where);
 	}
 
+	@Override
+	public int dbInsert(List<Map<String, String>> list) {
+		return dao.dbInsert(list);
+	}
+
 }
