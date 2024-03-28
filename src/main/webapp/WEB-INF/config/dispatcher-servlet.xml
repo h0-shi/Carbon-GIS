@@ -22,4 +22,6 @@
 	    p:prefix="/WEB-INF/jsp/" 
 	    p:suffix=".jsp"/>
 	    
+	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver" />
+	 
 </beans>

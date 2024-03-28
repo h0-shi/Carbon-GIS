@@ -213,6 +213,7 @@
 			
 			//coloerd Border 레이어 생성
 			map.removeLayer(selectedLayer);
+			
 			var colorWms = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
 					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
@@ -351,18 +352,24 @@
 		$("#fileBtn").click(function(event){
 			event.preventDefault();
 			var form = $("#file");
-			console.log(form);
-			var formData = new FormData(form);
+			console.log(form[0]); 
 			
-			formData.append("file", $("#file")[0].files[0]);
+			var formData = new FormData(form[0]);
+			//console.log(formData); 
+			
 			$.ajax({
-				url: 'test.do',
+				url: './test.do',
+				enctype: 'multipart/form-data',
 				processData: false,
 				contentType: false,
 				data: formData,
 				type: 'POST',
-				success: function(data){
-					console.log(data);
+				success: function(result){
+					console.log(result);
+					alert(result);
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
 				}
 			});
 		});
@@ -421,7 +428,7 @@
 	    <button type="submit">선택</button>
       </form>
       <form id="file" enctype="multipart/form-data">
-      	<input type="file">
+      	<input type="file" name="file">
       	<button type="button" id="fileBtn">업로드</button>
       </form>
    </div>

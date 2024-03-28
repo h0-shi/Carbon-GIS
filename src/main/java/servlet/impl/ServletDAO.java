@@ -36,4 +36,8 @@ public class ServletDAO extends EgovComAbstractDAO {
 		return session.selectOne("servlet.center",where);
 	}
 
+	public int dbInsert(List<Map<String, String>> list) {
+		return session.insert("dbInsert",list);
+	}
+
 }
