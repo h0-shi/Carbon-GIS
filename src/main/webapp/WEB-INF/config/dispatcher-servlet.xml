@@ -19,7 +19,7 @@
 
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
-	    p:prefix="/WEB-INF/jsp/" 
+	    p:prefix="/WEB-INF/config/jsp/" 
 	    p:suffix=".jsp"/>
 	    
 	<bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver" id="multipartResolver" />

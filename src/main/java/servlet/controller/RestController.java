@@ -59,7 +59,7 @@ public class RestController {
 
 		String aLine = "";
 		while((aLine = bf.readLine()) != null) {
-/*			String[] arr = aLine.split("\\|");
+			String[] arr = aLine.split("\\|");
 		    Map<String, String> map = new HashMap<String, String>();
 		    map.put("useDate", arr[0]);
 //		    map.put("mtLoc", arr[1]);
@@ -76,7 +76,7 @@ public class RestController {
 //		    map.put("boobeon", arr[12]);
 		    map.put("usage", arr[13]);
 		    list.add(map);
-		    */
+		    
 		}
 		bf.close();
 		
