@@ -16,5 +16,5 @@ public interface ServletService {
 
 	Map<String, Double> center(Map<String, String> where);
 
-	int dbInsert(List<Map<String, String>> list);
+	int dbInsert(List<Map<String, Object>> list);
 }

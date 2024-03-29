@@ -1,15 +1,15 @@
 package servlet.controller;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import javax.annotation.Resource;
 
@@ -54,14 +54,19 @@ public class RestController {
 		MultipartFile mFile = request.getFile("file");
 		InputStreamReader isr = new InputStreamReader(mFile.getInputStream(),"UTF-8");
 		BufferedReader bf = new BufferedReader(isr);
-		
-		List<Map<String, String>> list = new ArrayList<Map<String,String>>();
+		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 
+		long size = mFile.getSize();
 		String aLine = null;
+		int pageSize = 1;
+		long getByte = 0;
+		int count = 1;
+		
 		while((aLine = bf.readLine()) != null) {
-			Map<String, String> map = new HashMap<String, String>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			getByte += aLine.getBytes("UTF-8").length;
+			//System.out.println(getByte);
 			String[] arr = aLine.split("\\|");
-			
 		    map.put("useDate", arr[0]);
 //		    map.put("mtLoc", arr[1]);
 //		    map.put("rdLoc", arr[2]);
@@ -75,14 +80,22 @@ public class RestController {
 //		    map.put("udrtYn", arr[10]);
 //		    map.put("bonbeon", arr[11]);
 //		    map.put("boobeon", arr[12]);
-		    map.put("usage", arr[13]);
+		    map.put("usage", Integer.parseInt(arr[13]));
+		  
 		    list.add(map);
+		    if(--pageSize <= 0 ) {
+		    	//int result = servletService.dbInsert(list);
+		    	list.clear();
+		    	System.out.println(((getByte*100)/size)+"%");
+		    	pageSize = 1;
+		    }
 		    
 		}
+		
 		bf.close();
 		
 		//int result = servletService.dbInsert(list);
-		return 1; //result;
+		return 1;//return result; 
 	}
 	
 

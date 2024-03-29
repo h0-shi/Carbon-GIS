@@ -37,7 +37,7 @@
 	</select>
 	
 	<insert id="dbInsert" parameterType="map">
-		INSERT INTO "TB_CARBON_C1" (useDate,sggCD,bjd,usage) VALUES 
+		INSERT INTO "c1_test" ("useDate","sggCD",bjd,usage) VALUES 
 		<foreach collection="list" item="item" separator=",">
 			(#{item.useDate}, #{item.sggCD},#{item.bjd},#{item.usage})
 		</foreach>

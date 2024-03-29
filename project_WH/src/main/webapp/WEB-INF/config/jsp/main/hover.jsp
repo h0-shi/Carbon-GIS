@@ -56,7 +56,8 @@
 		               'VERSION' : '1.1.0', // 2. 버전
 		               <c:if test="${size eq 'sd'}">
 		               'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997', 
+		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
+		               'style' : 'line',
 		               </c:if>
 		               
 		               <c:if test="${size eq 'sgg'}">
@@ -172,6 +173,7 @@
 				return false;
 			}
 			
+			//드롭다운 가져옴
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
@@ -190,6 +192,7 @@
 					console.log('drop다운 에러');
 				}
 			});
+			
 			// 시,도 중심 좌표값 가져옴
 			$.ajax({
 				url: "./getCenter.do",
@@ -236,12 +239,11 @@
 		
 		//시군구 변경시 법정동 가져옴
 		$("#sgg").on('change',function(){
-			
 			var sgg = $(this).val();
 			var sd = $(this).siblings('#location').val();
 
+			//전체선택 줌아웃
 			if(sgg.length < 1){
-				
 				$.ajax({
 					url: "./getCenter.do",
 					type: "post",
@@ -281,18 +283,17 @@
 				});
 				selectedLayer = colorWms;
 				map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
-				
-				return false;
 			}
+
 			
+			
+			//법정동 리스트 출력
 			var bjd = $("#bjd");
 			var filter;
-			
 			if(sgg.length > 0){
 				filter = sd+' '+sgg;
 			}
 			
-			//리스트 출력
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
@@ -347,7 +348,9 @@
 			});
 			selectedLayer = colorWms;
 			map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
-		})
+		});
+		
+		
 	
 		$("#fileBtn").click(function(event){
 			event.preventDefault();

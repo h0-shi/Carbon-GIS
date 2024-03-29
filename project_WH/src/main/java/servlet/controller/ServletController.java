@@ -52,6 +52,7 @@ public class ServletController {
 				filter = "sd_nm='"+sd+"'";
 			}
 		}
+		
 		model.addAttribute("size",size);
 		model.addAttribute("filter",filter);
 		model.addAttribute("key",util.getKey());
