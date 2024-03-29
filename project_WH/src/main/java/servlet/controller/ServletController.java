@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import servlet.service.ServletService;
-import servlet.util.Key;
+import servlet.util.Util;
 import servlet.vo.ServletVO;
 
 @Controller
@@ -23,18 +23,13 @@ public class ServletController {
 	private ServletService servletService;
 	
 	@Autowired
-	private Key util;
+	private Util util;
 	
 	@RequestMapping(value = "/main.do")
 	public String mainTest(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
-		List<ServletVO> sidonm = servletService.sidonm();
-		
-		if(zip.length()>1) {
-			zip = "sd_nm='"+zip+"'";
-		}
-		model.addAttribute("zip",zip);
-		//model.addAttribute("key",util.getKey());
-		model.addAttribute("list",sidonm);
+		String strLegend = servletService.legend();
+		Long[] legend = util.getLegend(strLegend);
+
 		return "main/main";
 	}
 	
@@ -52,7 +47,10 @@ public class ServletController {
 				filter = "sd_nm='"+sd+"'";
 			}
 		}
-		
+		String strLegend = servletService.legend();
+		Long[] legend = util.getLegend(strLegend);
+		model.addAttribute(legend);
+		//지금은 시도만
 		model.addAttribute("size",size);
 		model.addAttribute("filter",filter);
 		model.addAttribute("key",util.getKey());

@@ -25,32 +25,44 @@
         right: 20px;
         top: 20px;
     }
+	.pop{
+		background-color: white;
+	}    
+
+    
 </style>
 <script>
    $(document).ready(function() {
 	   
-	   var temp;
-		   
-	   var source = new ol.source.XYZ({
-		    url: 'http://api.vworld.kr/req/wmts/1.0.0/${key}/Base/{z}/{y}/{x}.png'
-		});
-		var viewLayer = new ol.layer.Tile({
-		    source: source
-		});
+	   let map = new ol.Map({
+		   target: 'map', // 맵 객체를 연결하기 위한 target으로 <div>의 id값을 지정해준다.
+		    layers: [ // 지도에서 사용 할 레이어의 목록을 정희하는 공간이다.
+		      new ol.layer.Tile({
+		        source: new ol.source.OSM({
+		          url: 'http://api.vworld.kr/req/wmts/1.0.0/${key}/Base/{z}/{y}/{x}.png' // vworld의 지도를 가져온다.
+		        })
+		      })
+		    ],
+		    view: new ol.View({ // 지도가 보여 줄 중심좌표, 축소, 확대 등을 설정한다. 보통은 줌, 중심좌표를 설정하는 경우가 많다.
+		      center: ol.proj.fromLonLat([128.4, 35.7]),
+		      zoom: 7
+		    })
+	   });
+	   
 		var wms = new ol.layer.Tile({
-		    visible: true,
-		   source : new ol.source.TileWMS({
-		            url : 'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
-		            params : {
+			source : new ol.source.TileWMS({
+				url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+				 params : {
 		               'VERSION' : '1.1.0', // 2. 버전
 		               <c:if test="${size eq 'sd'}">
-		               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997', 
+		               'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
+		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
+		               'style' : 'line',
 		               </c:if>
 		               
 		               <c:if test="${size eq 'sgg'}">
-		               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+		               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
+		               'BBOX' : '1.3871489329746835E7,3910407.083927817,1.46800091844669E7,4666488.829376992', 
 		               </c:if>
 		               
 		               <c:if test="${size eq 'bjd'}">
@@ -59,27 +71,25 @@
 		               </c:if>
 		               
 		               'SRS' : 'EPSG:3857', // SRID
-		               'FORMAT' : "image/png", // 포맷
-		           		'CQL_FILTER' : temp
+		               'FORMAT' : "image/png" // 포맷
 		            },
 		            serverType : 'geoserver',
 		         })
 		});
 		
-		var view = new ol.View({
-			center: ol.proj.fromLonLat([128.4, 35.7]),
-            zoom: 7
-		});
-		var mapView = new ol.Map({
-		            target: "map",
-		            layers: [viewLayer, wms],
-		            view: view
-		});
+		map.addLayer(wms); // 맵 객체에 레이어를 추가함
 		
-		mapView.on('singleclick', function(evt) {
-		    var view = mapView.getView();
+		//Colored Border 지우기 위한 변수
+		var selectedLayer;
+	
+	// 지도 클릭시 정보 가져옴
+		map.on('singleclick', function(evt) {
+			//map.removeLayer(selectedLayer);
+			
+		    var view = map.getView();
 		    var viewResolution = view.getResolution();
 		    var source = wms.getSource();
+		    var ele;
 		    var url =  source.getGetFeatureInfoUrl(
 		    		 evt.coordinate, viewResolution, view.getProjection(), {
 		    	            'INFO_FORMAT': 'application/json',
@@ -90,71 +100,204 @@
 		        	response.text().then(function(text){
 						var jsonObj = JSON.parse(text);
 						<c:if test="${size eq 'sd'}">
-						var ele = jsonObj.features[0].properties.sd_nm;
+							ele = jsonObj.features[0].properties.sd_nm;
 						</c:if>
 						<c:if test="${size eq 'sgg'}">
-						var ele = jsonObj.features[0].properties.sgg_nm;
+							ele = jsonObj.features[0].properties.sgg_nm;
 						</c:if>
 						<c:if test="${size eq 'bjd'}">
-						var ele = jsonObj.features[0].properties.bjd_nm;
+							ele = jsonObj.features[0].properties.bjd_nm;
 						</c:if>
-						$("#selectedLoc").text("선택한 위치 : "+ele);
+						var usage = jsonObj.features[0].properties.usage;
+						$("#selectedLoc").text("선택한 위치 : "+ele+" | "+"사용량 : "+usage);
+						
+						//오버레이 생성
+						var coordinate = evt.coordinate;
+						const div = $('.ol-overlay-container');
+						if(div.length>0){
+							div.remove();
+						}
+						
+						let content = document.createElement("div");
+						content.classList.add('ol-popup','pop');
+						
+						content.innerHTML = '<span> 선택 지역 : '+ele+'<br>사용량 : '+usage+'</span>';
+						let overlay = new ol.Overlay({
+						       element: content, // 생성한 DIV
+						});
+						//오버레이의 위치 저장
+						overlay.setPosition(coordinate);
+						//지도에 추가
+						
+						map.addOverlay(overlay);
+						
+						/*
+						싱글클릭
+						var colorWms = new ol.layer.Tile({
+							source : new ol.source.TileWMS({
+								url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+								params : {
+						               'VERSION' : '1.1.0', // 2. 버전
+						               'STYLES' : 'line ', // 2. 버전
+						               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
+						               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
+						               'SRS' : 'EPSG:3857', // SRID
+						               'FORMAT' : "image/png", // 포맷
+						               'CQL_FILTER' : "sd_nm='"+ele+"'"
+						            },
+						            serverType : 'geoserver'
+						         })
+						});
+						selectedLayer = colorWms;
+						map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
+						*/
 		        	})
+		        	
 		        });
 		    }
-		});
-		
-		$("#size").on('change',function(){
-			var size = $("#size").val();
-			//나중에 범례 지정에 따라 드롭다운 뜨게 하자
+		    
+		    
+		    
 		});
 		
 		$("#location").on('change',function(){
-			
-			var sd = $("#location option:selected");
+			//var param = "sd_nm='"+$(this).val()+"'";
+			var sd = $(this).val();
 			var sgg = $("#sgg");
 			
-			//mapView.removeLayer(wms);
-
-			temp = "sd_nm='"+$(this).val()+"'";
-			alert(temp);
+			//전체 선택시 줌 아웃
+			if(sd.length < 1){
+				var center = ol.proj.fromLonLat([128.4, 35.7]);
+				map.getView().setCenter(center);
+				map.getView().setZoom(7)
+				return false;
+			}
 			
-			wms.mergeNewParams({            
-				CQL_FILTER: "sd_nm='"+$(this).val()+"'"
-			});
-			wms.redraw(true);
-			//mapView.addLayer(wms);
-			
-			
+			//드롭다운 가져옴
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
-				data: {'sd' : sd.val()},
+				data: {'sd' : sd},
 				dataType : 'json',
 				success: function(result){
 					sgg.empty();
 					var all = $("<option value=''>전체보기</option>");
 					sgg.append(all);
 					for (var i = 0; i < result.length; i++) {
-						var option = $("<option>"+result[i].sgg_nm+"</option>");
+						var option = $("<option value='"+result[i].sgg_nm+"'>"+result[i].sgg_nm+"</option>");
 						sgg.append(option);
 					}
 				},
 				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
+					console.log('drop다운 에러');
 				}
 			});
+			
+			// 시,도 중심 좌표값 가져옴
+			$.ajax({
+				url: "./getCenter.do",
+				type: "post",
+				data: {'filter' : sd, 'type':'sd'},
+				dataType : 'json',
+				success: function(result){
+					var center = [result.x, result.y];
+					map.getView().setCenter(center);
+					if(sd.match('특별')||sd.match('광역')){
+						map.getView().setZoom(11);
+					} else {
+						map.getView().setZoom(9);
+					}
+				},
+				error: function(request, status, error){ //통신오류
+					console.log('중심좌표 가져오기 에러');
+				}
+				
+			});
+			
+			//coloerd Border 레이어 생성
+			map.removeLayer(selectedLayer);
+			
+			var colorWms = new ol.layer.Tile({
+				source : new ol.source.TileWMS({
+					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					params : {
+			               'VERSION' : '1.1.0', // 2. 버전
+			               'STYLES' : 'line ', // 2. 버전
+			               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
+			               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+			               'SRS' : 'EPSG:3857', // SRID
+			               'FORMAT' : "image/png", // 포맷
+			               'CQL_FILTER' : "sd_nm='"+sd+"'"
+			            },
+			            serverType : 'geoserver'
+			         })
+			});
+			selectedLayer = colorWms;
+			map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
+			
 		});
 		
+		//시군구 변경시 법정동 가져옴
 		$("#sgg").on('change',function(){
+			var sgg = $(this).val();
+			var sd = $(this).siblings('#location').val();
+
+			//전체선택 줌아웃
+			if(sgg.length < 1){
+				$.ajax({
+					url: "./getCenter.do",
+					type: "post",
+					data: {'filter' : sd, 'type':'sd'},
+					dataType : 'json',
+					success: function(result){
+						var center = [result.x, result.y];
+						map.getView().setCenter(center);
+						if(sd.match('특별')||sd.match('광역')){
+							map.getView().setZoom(11);
+						} else {
+							map.getView().setZoom(9);
+						}
+					},
+					error: function(request, status, error){ //통신오류
+						console.log('중심좌표 가져오기 에러');
+					}
+					
+				});
+				
+				//coloerd Border 레이어 생성
+				map.removeLayer(selectedLayer);
+				var colorWms = new ol.layer.Tile({
+					source : new ol.source.TileWMS({
+						url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+						params : {
+				               'VERSION' : '1.1.0', // 2. 버전
+				               'STYLES' : 'line ', // 2. 버전
+				               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
+				               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+				               'SRS' : 'EPSG:3857', // SRID
+				               'FORMAT' : "image/png", // 포맷
+				               'CQL_FILTER' : "sd_nm='"+sd+"'"
+				            },
+				            serverType : 'geoserver'
+				         })
+				});
+				selectedLayer = colorWms;
+				map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
+			}
+
 			
-			var sgg = $("#sgg option:selected");
+			
+			//법정동 리스트 출력
 			var bjd = $("#bjd");
+			var filter;
+			if(sgg.length > 0){
+				filter = sd+' '+sgg;
+			}
 			
 			$.ajax({
 				url: "./hover.do",
 				type: "post",
-				data: {'sggSel' : sgg.val()},
+				data: {'sggSel' : sgg },
 				dataType : 'json',
 				success: function(result){
 					bjd.empty();
@@ -169,12 +312,69 @@
 					alert("에러 발생");
 				}
 			});
+			
+			// 지도 중심으로 이동
+			$.ajax({
+				url: "./getCenter.do",
+				type: "post",
+				data: {'filter' : filter , 'type':'sgg'},
+				dataType : 'json',
+				success: function(result){
+					var center = [result.x, result.y];
+					map.getView().setCenter(center);
+					map.getView().setZoom(11);
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
+				}
+			});
+			
+			//coloerd Border 레이어 생성
+			map.removeLayer(selectedLayer);
+			var colorWms = new ol.layer.Tile({
+				source : new ol.source.TileWMS({
+					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					params : {
+			               'VERSION' : '1.1.0', // 2. 버전
+			               'STYLES' : 'line ', // 2. 버전
+			               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
+			               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
+			               'SRS' : 'EPSG:3857', // SRID
+			               'FORMAT' : "image/png", // 포맷
+			               'CQL_FILTER' : "sgg_nm='"+sd+' '+sgg+"'"
+			            },
+			            serverType : 'geoserver'
+			         })
+			});
+			selectedLayer = colorWms;
+			map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
 		});
-		$("#delLayer").click(function(){
-			mapView.removeLayer(wms);
-		});
-		$("#addLayer").click(function(){
-			mapView.addLayer(wms);
+		
+		
+	
+		$("#fileBtn").click(function(event){
+			event.preventDefault();
+			var form = $("#file");
+			console.log(form[0]); 
+			
+			var formData = new FormData(form[0]);
+			//console.log(formData); 
+			
+			$.ajax({
+				url: './dbInsert.do',
+				enctype: 'multipart/form-data',
+				processData: false,
+				contentType: false,
+				data: formData,
+				type: 'POST',
+				success: function(result){
+					console.log(result);
+					alert(result);
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
+				}
+			});
 		});
    });
 </script>
@@ -184,7 +384,7 @@
       <!-- 실제 지도가 표출 될 영역 -->
    </div>
    <div id="selectedLoc">
-   선택한 위치 : 
+   선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
    </div>
    	
    <div>
@@ -229,6 +429,10 @@
 		    </select>
 	    </c:if>
 	    <button type="submit">선택</button>
+      </form>
+      <form id="file" enctype="multipart/form-data">
+      	<input type="file" name="file">
+      	<button type="button" id="fileBtn">업로드</button>
       </form>
    </div>
 </body>

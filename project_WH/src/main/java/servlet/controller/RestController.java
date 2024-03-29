@@ -49,23 +49,19 @@ public class RestController {
 		return center;
 	}
 	
-	@PostMapping("/test.do")
+	@PostMapping("/dbInsert.do")
 	public int test(MultipartHttpServletRequest request) throws IOException {
 		MultipartFile mFile = request.getFile("file");
 		InputStreamReader isr = new InputStreamReader(mFile.getInputStream(),"UTF-8");
 		BufferedReader bf = new BufferedReader(isr);
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 
-		long size = mFile.getSize();
 		String aLine = null;
 		int pageSize = 1;
-		long getByte = 0;
 		int count = 1;
 		
 		while((aLine = bf.readLine()) != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			getByte += aLine.getBytes("UTF-8").length;
-			//System.out.println(getByte);
 			String[] arr = aLine.split("\\|");
 		    map.put("useDate", arr[0]);
 //		    map.put("mtLoc", arr[1]);
@@ -85,8 +81,8 @@ public class RestController {
 		    list.add(map);
 		    if(--pageSize <= 0 ) {
 		    	//int result = servletService.dbInsert(list);
+		    	System.out.println("클리어"+count++);
 		    	list.clear();
-		    	System.out.println(((getByte*100)/size)+"%");
 		    	pageSize = 1;
 		    }
 		    

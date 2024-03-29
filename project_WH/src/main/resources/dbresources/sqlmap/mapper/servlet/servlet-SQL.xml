@@ -42,4 +42,11 @@
 			(#{item.useDate}, #{item.sggCD},#{item.bjd},#{item.usage})
 		</foreach>
 	</insert>
+	
+	<select id="legend" resultType="String">
+		SELECT cdb_jenksbins(
+			(SELECT ARRAY_AGG(usage) AS sum_array 
+			FROM (  SELECT usage FROM c1_sd) AS subquery_alias), 5
+		) as test
+	</select>
 </mapper>

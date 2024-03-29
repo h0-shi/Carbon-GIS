@@ -57,7 +57,6 @@
 		               <c:if test="${size eq 'sd'}">
 		               'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
-		               'style' : 'line',
 		               </c:if>
 		               
 		               <c:if test="${size eq 'sgg'}">
@@ -69,7 +68,11 @@
 		               'LAYERS' : 'Project:tl_bjd', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3873946E7,3906626.5,1.4428045E7,4670269.5', 
 		               </c:if>
-		               
+		               "STYLES" : function(feature, resolution){
+		            	   image: new ol.style.Style({
+		            		   
+		            	   })
+		               },
 		               'SRS' : 'EPSG:3857', // SRID
 		               'FORMAT' : "image/png" // 포맷
 		            },
@@ -361,7 +364,7 @@
 			//console.log(formData); 
 			
 			$.ajax({
-				url: './test.do',
+				url: './dbInsert.do',
 				enctype: 'multipart/form-data',
 				processData: false,
 				contentType: false,

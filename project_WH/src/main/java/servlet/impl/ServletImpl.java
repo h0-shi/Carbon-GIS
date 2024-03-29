@@ -49,4 +49,9 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 		return dao.dbInsert(list);
 	}
 
+	@Override
+	public String legend() {
+		return dao.legend();
+	}
+
 }
