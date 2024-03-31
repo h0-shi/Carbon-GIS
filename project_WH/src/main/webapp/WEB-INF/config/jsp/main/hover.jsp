@@ -68,11 +68,6 @@
 		               'LAYERS' : 'Project:tl_bjd', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3873946E7,3906626.5,1.4428045E7,4670269.5', 
 		               </c:if>
-		               "STYLES" : function(feature, resolution){
-		            	   image: new ol.style.Style({
-		            		   
-		            	   })
-		               },
 		               'SRS' : 'EPSG:3857', // SRID
 		               'FORMAT' : "image/png" // 포맷
 		            },
