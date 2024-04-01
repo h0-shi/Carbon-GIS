@@ -55,13 +55,15 @@
 				 params : {
 		               'VERSION' : '1.1.0', // 2. 버전
 		               <c:if test="${size eq 'sd'}">
-		               'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
+		                'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
 		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
+		               'STYLES' : 'line',
 		               </c:if>
 		               
 		               <c:if test="${size eq 'sgg'}">
 		               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.3871489329746835E7,3910407.083927817,1.46800091844669E7,4666488.829376992', 
+		               'BBOX' : '1.3871489329746835E7,3910407.083927817,1.46800091844669E7,4666488.829376992',
+		               'STYLES' : 'line',
 		               </c:if>
 		               
 		               <c:if test="${size eq 'bjd'}">
@@ -157,11 +159,14 @@
 		    
 		    
 		});
-		
+		var legend;
 		$("#location").on('change',function(){
 			//var param = "sd_nm='"+$(this).val()+"'";
-			var sd = $(this).val();
+			map.removeLayer(legend);
+			var sd = $("#location option:selected").text();
 			var sgg = $("#sgg");
+			var sggCd = $("#location option:selected").val();
+			console.log(sggCd);
 			
 			//전체 선택시 줌 아웃
 			if(sd.length < 1){
@@ -170,6 +175,23 @@
 				map.getView().setZoom(7)
 				return false;
 			}
+			
+			legend = new ol.layer.Tile({
+				source : new ol.source.TileWMS({
+					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					 params : {
+			               'VERSION' : '1.1.0', // 2. 버전
+			               'LAYERS' : 'Project:sgg_view', // 3. 작업공간:레이어 명
+			               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
+			               'SRS' : 'EPSG:3857', // SRID
+			               'viewparams': 'sgg_cd:'+sggCd,
+			               'FORMAT' : "image/png" // 포맷
+			            },
+			            serverType : 'geoserver',
+			         })
+			});
+			map.addLayer(legend);
+			
 			
 			//드롭다운 가져옴
 			$.ajax({
@@ -182,7 +204,7 @@
 					var all = $("<option value=''>전체보기</option>");
 					sgg.append(all);
 					for (var i = 0; i < result.length; i++) {
-						var option = $("<option value='"+result[i].sgg_nm+"'>"+result[i].sgg_nm+"</option>");
+						var option = $("<option value='"+result[i].sgg_cd+"'>"+result[i].sgg_nm+"</option>");
 						sgg.append(option);
 					}
 				},
@@ -237,9 +259,11 @@
 		
 		//시군구 변경시 법정동 가져옴
 		$("#sgg").on('change',function(){
-			var sgg = $(this).val();
-			var sd = $(this).siblings('#location').val();
-
+			var sgg = $("#sgg option:selected").text();
+			console.log(sgg);
+			var sd = $('#location option:selected').text();
+			console.log(sd);
+			
 			//전체선택 줌아웃
 			if(sgg.length < 1){
 				$.ajax({
@@ -405,7 +429,7 @@
 	    <select id="location" name="sd">
 	    	<option value="">전체보기</option>
 	    	<c:forEach items="${list}" var="row">
-	    	<option value="${row.sd_nm}"
+	    	<option value="${row.sd_cd}"
 	    	<c:if test="${row.sd_nm eq param.sd }">selected="selected"</c:if>
 	    	>${row.sd_nm}</option>
 	    	</c:forEach>

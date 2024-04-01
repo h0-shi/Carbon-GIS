@@ -3,13 +3,13 @@
 <mapper namespace="servlet">
 
 	<select id="sidonm" resultType="servletVo">
-		SELECT DISTINCT sd_nm FROM public."Location_C1" 
+		SELECT DISTINCT sd_nm, sd_cd FROM public."Location_C1" 
 		WHERE sd_nm is not null
 		ORDER BY sd_nm
 	</select>
 	
 	<select id="sgg" resultType="servletVo" parameterType="String">
-		SELECT DISTINCT sgg_nm FROM public."Location_C1" 
+		SELECT DISTINCT sgg_nm,sgg_cd FROM public."Location_C1" 
 		WHERE sd_nm=#{sd } AND sgg_nm is not null
 		ORDER BY sgg_nm
 	</select>

@@ -19,4 +19,5 @@ public interface ServletService {
 	int dbInsert(List<Map<String, Object>> list);
 
 	String legend();
+
 }

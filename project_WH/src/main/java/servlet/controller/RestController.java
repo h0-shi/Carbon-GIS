@@ -32,7 +32,6 @@ public class RestController {
 	@PostMapping("/hover.do")
 	public List<ServletVO> hover(String sd, String sggSel) throws IOException {
 		List<ServletVO> sgg = servletService.sgg(sd);
-		
 		if(sggSel != null) {
 			List<ServletVO> bjd = servletService.bjd(sggSel);
 			return bjd;
