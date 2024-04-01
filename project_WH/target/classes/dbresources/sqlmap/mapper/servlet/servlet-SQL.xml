@@ -15,7 +15,7 @@
 	</select>
 	
 	<select id="bjd" resultType="servletVo" parameterType="String">
-		SELECT bjd_nm FROM public."Location_C1" WHERE sgg_nm=#{sgg } ORDER BY bjd_nm
+		SELECT DISTINCT bjd_nm, bjd_cd FROM public."Location_C1" WHERE sgg_nm=#{sgg } ORDER BY bjd_nm
 	</select>
 	
 	<select id="center" resultType="HashMap" parameterType="Map">
@@ -26,12 +26,18 @@
 	<if test='type.equals("sgg") ' >
 		FROM public.tl_sgg
 	</if>
+	<if test='type.equals("bjd") ' >
+		FROM public.tl_bjd
+	</if>
 	<where>
 		<if test='type.equals("sd") ' >
 			sd_nm = #{filter}
 		</if>
 		<if test='type.equals("sgg") ' >
 			sgg_nm = #{filter}
+		</if>
+		<if test='type.equals("bjd") ' >
+			bjd_nm = #{filter}
 		</if>
 	</where>
 	</select>
