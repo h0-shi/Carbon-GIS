@@ -1,4 +1,4 @@
-package servlet.impl;
+package servlet.DAO;
 
 import java.util.List;
 import java.util.Map;
@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
+import servlet.impl.EgovComAbstractDAO;
 import servlet.vo.ServletVO;
 
 @Repository("ServletDAO")
@@ -37,11 +38,11 @@ public class ServletDAO extends EgovComAbstractDAO {
 	}
 
 	public int dbInsert(List<Map<String, Object>> list) {
-		return session.insert("dbInsert",list);
+		return session.insert("servlet.dbInsert",list);
 	}
 
 	public String legend(Map<String, String> where) {
-		return session.selectOne("legend",where);
+		return session.selectOne("servlet.legend",where);
 	}
 
 }

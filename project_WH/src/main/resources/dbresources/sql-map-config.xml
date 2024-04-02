@@ -9,4 +9,5 @@
 		<typeAlias alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
 		<typeAlias alias="servletVo" type="servlet.vo.ServletVO"/>
 	</typeAliases>
+	
 </configuration>

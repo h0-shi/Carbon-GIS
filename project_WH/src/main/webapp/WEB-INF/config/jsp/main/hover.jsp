@@ -151,6 +151,10 @@
 	// 지도 클릭시 정보 가져옴
 		map.on('singleclick', function(evt) {
 			//var sgg = $('#sgg option:selected').text();
+			sggCD = $('#sgg option:selected').val();
+			sgg = $('#sgg option:selected').text();
+			
+			
 			$(".pop").remove();
 		    var view = map.getView();
 		    var viewResolution = view.getResolution();
@@ -164,18 +168,8 @@
 		        fetch(url).then(function(response) {
 		        	response.text().then(function(text){
 						var jsonObj = JSON.parse(text);
-						<c:if test="${size eq 'sd'}">
-							ele = jsonObj.features[0].properties.bjd_nm;
-						</c:if>
-						<c:if test="${size eq 'sgg'}">
-							ele = jsonObj.features[0].properties.bjd_nm;
-						</c:if>
-						<c:if test="${size eq 'bjd'}">
-							ele = jsonObj.features[0].properties.bjd_nm;
-						</c:if>
 						var usage = jsonObj.features[0].properties.usage;
-						$("#selectedLoc").text("선택한 위치 : "+sgg+" "+ele+" | "+"사용량 : "+usage);
-						
+						usage = usage.toLocaleString('ko-KR');
 						//오버레이 생성
 						var coordinate = evt.coordinate;
 						const div = $('.ol-overlay-container');
@@ -186,7 +180,16 @@
 						let content = document.createElement("div");
 						content.classList.add('ol-popup','pop');
 						
-						content.innerHTML = "<div class='overLay'><span> 선택 지역 : "+sgg+" "+ele+'<br>사용량 : '+usage+'</span></div>';
+						if(sggCD == 0){
+							ele = jsonObj.features[0].properties.sgg_nm;
+							$("#selectedLoc").text("선택한 위치 : "+ele+" | "+"사용량 : "+usage);
+							content.innerHTML = "<div class='overLay'><span> 선택 지역 : "+ele+'<br>사용량 : '+usage+'</span></div>';
+						} else {
+							ele = jsonObj.features[0].properties.bjd_nm;
+							$("#selectedLoc").text("선택한 위치 : "+sgg+" "+ele+" | "+"사용량 : "+usage);
+							content.innerHTML = "<div class='overLay'><span> 선택 지역 : "+sgg+" "+ele+'<br>사용량 : '+usage+'</span></div>';
+						}
+						
 						overlay = new ol.Overlay({
 						       element: content, // 생성한 DIV
 						});
@@ -206,7 +209,7 @@
 			//map.removeLayer(legend);
 			
 			sd = $("#sd option:selected").text();
-			sdCd = $("#sd option:selected").val();
+			sdCD = $("#sd option:selected").val();
 			//sgg 드롭다운			
 			var sggDd = $("#sgg");
 			filter = "sd_nm='"+sd+"'";
@@ -216,7 +219,7 @@
 			sggDd.append(all);
 			
 			//전체 선택시 줌 아웃
-			if(sdCd.length < 1){
+			if(sdCD.length < 1){
 				var center = ol.proj.fromLonLat([128.4, 35.7]);
 				map.getView().setCenter(center);
 				map.getView().setZoom(7)
@@ -577,18 +580,6 @@
 	      <button type="button" id="delLayer" name="rpg_1">레이어삭제하기</button>
 	      
 	      <form class="dropdowns" id="dropdowns">
-	      	<select name="size" id="size"  onchange="getSgg();">
-		      	<option value="sd"
-		      	<c:if test="${param.size eq 'sd' }">selected="selected"</c:if>
-		      	>시/도</option>
-		      	<option value="sgg"
-		      	<c:if test="${param.size eq 'sgg' }">selected="selected"</c:if>
-		      	>시군구</option>
-		      	<option value="bjd"
-		      	<c:if test="${param.size eq 'bjd' }">selected="selected"</c:if>
-		      	>법정동</option>
-		    </select>
-		    
 		    <select id="sd" name="sd">
 		    	<option value="">전체보기</option>
 		    	<c:forEach items="${list}" var="row">

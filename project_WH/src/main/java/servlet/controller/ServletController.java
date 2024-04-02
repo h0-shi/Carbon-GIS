@@ -27,27 +27,13 @@ public class ServletController {
 	
 	@RequestMapping(value = "/main.do")
 	public String mainTest(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
-
 		return "main/main";
 	}
 	
 	@GetMapping("/hover.do")
 	@CrossOrigin(origins = "*", allowedHeaders =  "*")
-	public String hover(ModelMap model,@RequestParam(name="sgg", defaultValue = "", required = false) String sgg_nm, @RequestParam(name="sd",defaultValue = "", required = false) String sd, @RequestParam(name="size",required = false, defaultValue = "sd") String size) throws Exception {
+	public String hover(ModelMap model) {
 		List<ServletVO> sidonm = servletService.sidonm();
-		String filter = "";
-		if(sd.length()>0) {
-			List<ServletVO> sgg = servletService.sgg(sd);
-			model.addAttribute("sgg",sgg);
-			if(sgg_nm.length()>0) {
-				filter = "sgg_nm='"+sd+" "+sgg_nm+"'";
-			} else {
-				filter = "sd_nm='"+sd+"'";
-			}
-		}
-		//지금은 시도만
-		model.addAttribute("size",size);
-		model.addAttribute("filter",filter);
 		model.addAttribute("key",util.getKey());
 		model.addAttribute("list",sidonm);
 		return "main/hover";
