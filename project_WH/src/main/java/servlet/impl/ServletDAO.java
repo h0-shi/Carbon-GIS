@@ -40,8 +40,8 @@ public class ServletDAO extends EgovComAbstractDAO {
 		return session.insert("dbInsert",list);
 	}
 
-	public String legend() {
-		return session.selectOne("legend");
+	public String legend(Map<String, String> where) {
+		return session.selectOne("legend",where);
 	}
 
 }

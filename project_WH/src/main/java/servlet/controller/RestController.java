@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import servlet.service.ServletService;
+import servlet.util.Util;
 import servlet.vo.ServletVO;
 
 @Controller
@@ -25,6 +27,8 @@ public class RestController {
 	
 	@Resource(name = "ServletService")
 	private ServletService servletService;
+	@Autowired
+	Util util;
 	
 	@PostMapping("/hover.do")
 	public List<ServletVO> hover(String sd, String sggSel) throws IOException {
@@ -53,41 +57,37 @@ public class RestController {
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 
 		String aLine = null;
-		int pageSize = 1;
-		int count = 1;
-		
+		int count = 0;
+		int pageSize = 10000;
 		while((aLine = bf.readLine()) != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			String[] arr = aLine.split("\\|");
 		    map.put("useDate", arr[0]);
-//		    map.put("mtLoc", arr[1]);
-//		    map.put("rdLoc", arr[2]);
 		    map.put("sggCD", arr[3]);
 		    map.put("bjd", arr[4]);
-//		    map.put("mtYn", arr[5]);
-//		    map.put("bun", arr[6]);
-//		    map.put("ji", arr[7]);
-//		    map.put("newNum", arr[8]);
-//		    map.put("newRdCd", arr[9]);
-//		    map.put("udrtYn", arr[10]);
-//		    map.put("bonbeon", arr[11]);
-//		    map.put("boobeon", arr[12]);
 		    map.put("usage", Integer.parseInt(arr[13]));
-		  
 		    list.add(map);
+		    count++;
 		    if(--pageSize <= 0 ) {
 		    	//int result = servletService.dbInsert(list);
-		    	System.out.println("클리어"+count++);
 		    	list.clear();
-		    	pageSize = 1;
+		    	pageSize = 0;
 		    }
-		    
 		}
 		
 		bf.close();
 		
-		//int result = servletService.dbInsert(list);
-		return 1;//return result; 
+		return count;//return result; 
+	}
+	
+	@PostMapping("legend.do")
+	public List<Long> legend(String filter, String type){
+		Map<String, String> where = new HashMap<String, String>();
+		where.put("filter", filter);
+		where.put("type", type);
+		String legendStr = servletService.legend(where);
+		List<Long> legend = util.getLegend(legendStr);
+		return legend;
 	}
 	
 

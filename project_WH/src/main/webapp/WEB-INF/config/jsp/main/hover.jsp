@@ -26,8 +26,8 @@
 	top: 20px;
    }   
  .legend{
-  width: auto;
-  height: 125px;
+  width: 170px;
+  height: 180px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,11 +52,35 @@
 .color{
 	width: 25px;
 	height: 20px;
-	background-color: red;
+}
+.fill0{
+	background-color: #fffb95;
+}
+.fill1{
+	background-color: #f8baba;
+}
+.fill2{
+	background-color: #f87c7c;
+}
+.fill3{
+	background-color: #f83e3e;
+}
+.fill4{
+	background-color: #f80000;
 }
 .boxLine{
 	width: 100%;
 	height: auto;
+}
+.overLay{
+	width: 280px;
+	height: 70px;
+	padding-top: 20px;
+	padding-left: 20px;
+	background-color: white;
+	border-radius: 5px;
+	justify-content: center;
+  	align-items: center;
 }
 </style>
 <script>
@@ -68,6 +92,8 @@
 		let ele;
 		//범례 레이어
 		let legend;
+		//오버레이
+		let overLay;
 		//지역 코드와 이름
 		let sdCD;
 		let sggCD;
@@ -124,12 +150,11 @@
 		
 	// 지도 클릭시 정보 가져옴
 		map.on('singleclick', function(evt) {
-
 			//var sgg = $('#sgg option:selected').text();
+			$(".pop").remove();
 		    var view = map.getView();
 		    var viewResolution = view.getResolution();
 		    var source = legend.getSource();
-		    console.log(sgg);
 		    var url =  source.getGetFeatureInfoUrl(
 		    		 evt.coordinate, viewResolution, view.getProjection(), {
 		    	            'INFO_FORMAT': 'application/json',
@@ -161,8 +186,8 @@
 						let content = document.createElement("div");
 						content.classList.add('ol-popup','pop');
 						
-						content.innerHTML = '<span> 선택 지역 : '+sgg+" "+ele+'<br>사용량 : '+usage+'</span>';
-						let overlay = new ol.Overlay({
+						content.innerHTML = "<div class='overLay'><span> 선택 지역 : "+sgg+" "+ele+'<br>사용량 : '+usage+'</span></div>';
+						overlay = new ol.Overlay({
 						       element: content, // 생성한 DIV
 						});
 						
@@ -171,25 +196,6 @@
 						//지도에 추가
 						map.addOverlay(overlay);
 						
-						/*
-						//싱글클릭
-						colorWms = new ol.layer.Tile({
-							source : new ol.source.TileWMS({
-								url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
-								params : {
-						               'VERSION' : '1.1.0', // 2. 버전
-						               'STYLES' : 'simple_roads ', // 2. 버전
-						               'LAYERS' : 'Project:tl_sd', // 3. 작업공간:레이어 명
-						               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
-						               'SRS' : 'EPSG:3857', // SRID
-						               'FORMAT' : "image/png", // 포맷
-						               'CQL_FILTER' : "sd_nm='"+ele+"'"
-						            },
-						            serverType : 'geoserver'
-						         })
-						});
-						map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
-						*/
 		        	})
 		        });
 		    }
@@ -241,13 +247,8 @@
 				data: {'filter' : sd, 'type':'sd'},
 				dataType : 'json',
 				success: function(result){
-					var center = [result.x, result.y];
-					map.getView().setCenter(center);
-					if(sd.match('특별')||sd.match('광역')){
-						map.getView().setZoom(11);
-					} else {
-						map.getView().setZoom(9);
-					}
+					
+					
 				},
 				error: function(request, status, error){ //통신오류
 					console.log('중심좌표 가져오기 에러');
@@ -381,24 +382,6 @@
 			var bjd = $('#bjd option:selected').text();
 			var sgg = $("#sgg option:selected").text();
 			var sggCd = $("#sgg option:selected").val();
-			console.log(bjd);
-			
-			/*
-			$.ajax({
-				url: "./getCenter.do",
-				type: "post",
-				data: {'filter' : bjd , 'type':'bjd'},
-				dataType : 'json',
-				success: function(result){
-					var center = [result.x, result.y];
-					map.getView().setCenter(center);
-					map.getView().setZoom(15);
-				},
-				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
-				}
-			});
-			*/
 			
 			//coloerd Border 레이어 생성
 			map.removeLayer(colorWms);
@@ -437,19 +420,13 @@
 			if(sdCD.length<1){
 				alert("시/도를 선택해주세요");
 				return false;
-				/*
-			} else if(sggCD.length<1){
-				alert("시/군/구를 선택해주세요");
-				return false;
-			} else if(bjdCD.length<1){
-				alert("법정동을 선택해주세요");
-				return false;
-				*/
 			}
+			
 			var bBox;
 			var params;
 			var filter;
 			var layer;
+			var type;
 			
 			if(bjdCD != 0){
 				layer = 'Project:bjd_view';
@@ -462,13 +439,12 @@
 				params = 'sgg_cd:'+sggCD;
 				filter ="";
 			} else if (sdCD != 0){
-				console.log(sdCD);
 				layer = 'Project:sgg_view';
 				bBox = '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997';
 				params = 'sgg_cd:'+sdCD;
 				filter ="";
 			}
-		
+			
 			legend = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
 					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
@@ -486,6 +462,41 @@
 			});
 			map.addLayer(legend);
 			
+			if(sggCD==0){
+				//type = 사용 할 테이블
+				type = "sgg";
+				//filter = where 조건
+				filter = sd;
+			} else {
+				type = "bjd";
+				filter = sggCD;
+			}
+			$.ajax({
+				url: "./legend.do",
+				type: "post",
+				data: {'filter' : filter , 'type':type},
+				dataType : 'json',
+				success: function(result){
+					console.log(result);
+					var table = $("#legendTable tbody");
+					$('#legendTable tbody tr td').remove();
+					$('#legendTable tbody tr').remove();
+					for (var i = 0; i < result.length; i++) {
+					var td = '<tr>'+
+							"<td class='color fill"+[i]+"'></td>";
+							if(i == 0){
+								td += '<td> 0 ~ '+result[i].toLocaleString('ko-KR')+'</td>'+'</tr>';
+							} else {
+								td += '<td>'+result[i-1].toLocaleString('ko-KR')+'~'+result[i].toLocaleString('ko-KR')+'</td>'+'</tr>';
+							}
+							
+					table.append(td);
+					}
+				},
+				error: function(request, status, error){ //통신오류
+					console.log("범례 오류 발생");
+				}
+			});
 			
 		});
 		
@@ -528,7 +539,7 @@
 		   </div>
 		      <!-- 실제 지도가 표출 될 영역 -->
 		      	<div class="draggable legend" id="legend">
-			   		<table>
+			   		<table id="legendTable">
 			   			<thead>
 			   			<tr>
 			   				<th colspan="2">범례입니다아</th>

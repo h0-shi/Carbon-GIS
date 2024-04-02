@@ -49,10 +49,28 @@
 		</foreach>
 	</insert>
 	
-	<select id="legend" resultType="String">
+	<select id="legend" resultType="String" parameterType="map">
 		SELECT cdb_jenksbins(
-			(SELECT ARRAY_AGG(usage) AS sum_array 
-			FROM (  SELECT usage FROM c1_sd) AS subquery_alias), 5
-		) as test
+			(SELECT ARRAY_AGG(usage) AS sum_array
+			FROM (
+				SELECT usage FROM 
+				<if test='type.equals("sgg")'>
+					c1_sgg 
+				</if>
+				<if test='type.equals("bjd")'>
+					c1_bjd
+				</if>
+				<where>
+					<if test='type.equals("sgg")'>
+					sd_nm=#{filter}
+					</if>
+					<if test='type.equals("bjd")'>
+					sgg_cd=#{filter}
+					</if>
+				</where>
+				) AS subquery_alias), 5
+			) as test
 	</select>
+	
+	
 </mapper>

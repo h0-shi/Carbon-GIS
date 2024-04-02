@@ -27,8 +27,6 @@ public class ServletController {
 	
 	@RequestMapping(value = "/main.do")
 	public String mainTest(ModelMap model, @RequestParam(name="zip", defaultValue = "" ,required = false) String zip) throws Exception {
-		String strLegend = servletService.legend();
-		Long[] legend = util.getLegend(strLegend);
 
 		return "main/main";
 	}
@@ -47,10 +45,6 @@ public class ServletController {
 				filter = "sd_nm='"+sd+"'";
 			}
 		}
-		String strLegend = servletService.legend();
-		Long[] legend = util.getLegend(strLegend);
-		
-		model.addAttribute(legend);
 		//지금은 시도만
 		model.addAttribute("size",size);
 		model.addAttribute("filter",filter);

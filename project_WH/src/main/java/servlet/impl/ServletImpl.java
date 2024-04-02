@@ -50,8 +50,8 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	}
 
 	@Override
-	public String legend() {
-		return dao.legend();
+	public String legend(Map<String, String> where) {
+		return dao.legend(where);
 	}
 
 }

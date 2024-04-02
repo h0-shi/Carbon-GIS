@@ -18,6 +18,6 @@ public interface ServletService {
 
 	int dbInsert(List<Map<String, Object>> list);
 
-	String legend();
+	String legend(Map<String, String> where);
 
 }
