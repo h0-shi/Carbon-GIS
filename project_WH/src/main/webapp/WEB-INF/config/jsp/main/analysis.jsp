@@ -23,7 +23,10 @@
 		chart.draw(data, null);
 	}
 $(document).ready(function(){
-	
+	$("#dropdowns").submit(event,function(){
+		event.preventDefault();
+		alert("눌렀슴당~");
+	})
 });
 </script>
 </head>
@@ -55,6 +58,14 @@ $(document).ready(function(){
 				</tbody>
 			</table>
 		</div>
+		<form id="dropdowns">
+			<select>
+				<option>시도</option>
+				<option>시군구</option>
+				<option>법정동</option>
+			</select>
+			<button type="submit">선택</button>
+		</form>
 	</div>
 </body>
 </html>
