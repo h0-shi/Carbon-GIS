@@ -9,6 +9,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>브이월드 오픈API</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <script>
@@ -44,15 +45,18 @@
             serverType : 'geoserver',
          })
       });
-      
       map.addLayer(wms); // 맵 객체에 레이어를 추가함
+      
+      //드래거블
+      $("#legend").draggable({containment:"#boxLine", scroll:false});
    });
+   
 </script>
 
 <style>
     .map {
-      height: 600px;
-      width: 100%;
+      height: 100%;
+      width: auto;
     }
     
     .olControlAttribution {
@@ -63,14 +67,68 @@
         right: 20px;
         top: 20px;
     }
+ .legend{
+  width: auto;
+  height: 125px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-size: x-small;
+  background-color: white;
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  
+  user-select: none;
+  
+  /*  drag cursor   */
+  cursor: grab;
+}
+
+.legend:active {
+  cursor: grabbing;
+}
+
+.color{
+	width: 25px;
+	height: 20px;
+	background-color: red;
+}
+.boxLine{
+	width: 100%;
+	height: auto;
+}
 </style>
 </head>
 <body>
+<div class="container">
+	<div class="boxLine" id="boxLine">
    <div id="map" class="map">
-      <!-- 실제 지도가 표출 될 영역 -->
    </div>
-   <div>
-   <p>${zip }
+      <!-- 실제 지도가 표출 될 영역 -->
+      	<div class="draggable legend" id="legend">
+	   		<table>
+	   			<thead>
+	   			<tr>
+	   				<th colspan="2">범례입니다아</th>
+	   			</tr>
+	   			<tr>	
+	   				<th>색상</th>
+	   				<th>범위</th>
+	   			</tr>
+	   			</thead>
+	   			<tbody>
+		   			<tr>
+		   				<td class="color"></td>
+		   				<td>숫자~숫자</td>
+		   			</tr>
+	   			</tbody>
+	   		</table>
+	   	</div>
+  	 <div>
+	</div>
       <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
       <form action="./main.do" method="get">
 	      <select id="location" name="zip">
@@ -82,5 +140,6 @@
 	      <button type="submit">선택</button>
       </form>
    </div>
+</div>
 </body>
 </html>

@@ -49,6 +49,7 @@ public class ServletController {
 		}
 		String strLegend = servletService.legend();
 		Long[] legend = util.getLegend(strLegend);
+		
 		model.addAttribute(legend);
 		//지금은 시도만
 		model.addAttribute("size",size);
