@@ -40,7 +40,7 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	}
 
 	@Override
-	public Map<String, Double> center(Map<String, String> where) {
+	public Map<String, String> center(Map<String, String> where) {
 		return dao.center(where);
 	}
 

@@ -211,6 +211,10 @@
 			var sggDd = $("#sgg");
 			filter = "sd_nm='"+sd+"'";
 			
+			sggDd.empty();
+			var all = $("<option value='0'>전체보기</option>");
+			sggDd.append(all);
+			
 			//전체 선택시 줌 아웃
 			if(sdCd.length < 1){
 				var center = ol.proj.fromLonLat([128.4, 35.7]);
@@ -227,9 +231,6 @@
 				data: {'sd' : sd},
 				dataType : 'json',
 				success: function(result){
-					sggDd.empty();
-					var all = $("<option value='0'>전체보기</option>");
-					sggDd.append(all);
 					for (var i = 0; i < result.length; i++) {
 						var option = $("<option value='"+result[i].sgg_cd+"'>"+result[i].sgg_nm+"</option>");
 						sggDd.append(option);
@@ -247,13 +248,12 @@
 				data: {'filter' : sd, 'type':'sd'},
 				dataType : 'json',
 				success: function(result){
-					
-					
+					var bbox = result.bbox;
+					map.getView().fit(bbox);
 				},
 				error: function(request, status, error){ //통신오류
 					console.log('중심좌표 가져오기 에러');
 				}
-				
 			});
 			
 			//coloerd Border 레이어 생성
@@ -279,38 +279,21 @@
 		
 		//시군구 변경시 법정동 가져옴
 		$("#sgg").on('change',function(){
-			sd = $("#sd option:selected").text();
 			sgg = $("#sgg option:selected").text();
 			sggCd = $("#sgg option:selected").val();
-
-			//전체선택 줌아웃
-			if(sggCd == 0){
-				$.ajax({
-					url: "./getCenter.do",
-					type: "post",
-					data: {'filter' : sd, 'type':'sd'},
-					dataType : 'json',
-					success: function(result){
-						var center = [result.x, result.y];
-						map.getView().setCenter(center);
-						if(sd.match('특별')||sd.match('광역')){
-							map.getView().setZoom(11);
-						} else {
-							map.getView().setZoom(9);
-						}
-					},
-					error: function(request, status, error){ //통신오류
-						console.log('중심좌표 가져오기 에러');
-					}
-					
-				});
-			}
 			
+			var bjdDd = $("#bjd");
+			bjdDd.empty();
+			var all = $("<option value='0'>전체보기</option>");
+			bjdDd.append(all);
+
 			//법정동 리스트 출력
 			if(sggCd != 0){
 				filter = sd+' '+sgg;
+				type = 'sgg';
 			} else {
 				filter = sd;
+				type = 'sd';
 			}
 			
 			$.ajax({
@@ -319,10 +302,6 @@
 				data: {'sggSel' : sgg },
 				dataType : 'json',
 				success: function(result){
-					var bjdDd = $("#bjd");
-					bjdDd.empty();
-					var all = $("<option value='0'>전체보기</option>");
-					bjdDd.append(all);
 					for (var i = 0; i < result.length; i++) {
 						var option = $("<option value="+result[i].bjd_cd+">"+result[i].bjd_nm+"</option>");
 						bjdDd.append(option);
@@ -335,22 +314,19 @@
 			
 			
 			// 지도 중심으로 이동
-			if(sggCd != 0){
-				$.ajax({
-					url: "./getCenter.do",
-					type: "post",
-					data: {'filter' : filter , 'type':'sgg'},
-					dataType : 'json',
-					success: function(result){
-						var center = [result.x, result.y];
-						map.getView().setCenter(center);
-						map.getView().setZoom(11);
-					},
-					error: function(request, status, error){ //통신오류
-						console.log("중심 이동 에러 발생");
-					}
-				});
-			}
+			$.ajax({
+				url: "./getCenter.do",
+				type: "post",
+				data: {'filter' : filter , 'type':type},
+				dataType : 'json',
+				success: function(result){
+					var bbox = result.bbox;
+					map.getView().fit(bbox);
+				},
+				error: function(request, status, error){ //통신오류
+					console.log("중심 이동 에러 발생");
+				}
+			});
 			
 			//coloerd Border 레이어 생성
 			if(sggCd != 0){
@@ -358,6 +334,7 @@
 			} else {
 				filter = "sd_nm='"+sd+"'";
 			}
+			
 			map.removeLayer(colorWms);
 			colorWms = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
@@ -379,9 +356,25 @@
 		});
 		
 		$("#bjd").on('change', function(){
-			var bjd = $('#bjd option:selected').text();
-			var sgg = $("#sgg option:selected").text();
-			var sggCd = $("#sgg option:selected").val();
+			bjd = $('#bjd option:selected').text();
+			bjdCD = $("#bjd option:selected").val();
+			
+			var cql;
+			var layer;
+			var bbox;
+			if(bjdCD!=0){
+				filter = bjdCD;
+				type = 'bjd';
+				cql = "bjd_nm='"+bjd+"'";
+				layer = 'Project:tl_bjd';
+				bbox = '1.3873946E7,3906626.5,1.4428045E7,4670269.5';
+			} else {
+				filter = sd+' '+sgg;
+				type = 'sgg';
+				cql = "sgg_nm='"+sd+' '+sgg+"'";
+				layer = 'Project:c1_sgg';
+				bbox = '1.386872E7,3906626.5,1.4428071E7,4670269.5';
+			}
 			
 			//coloerd Border 레이어 생성
 			map.removeLayer(colorWms);
@@ -391,16 +384,30 @@
 					params : {
 			               'VERSION' : '1.1.0', // 2. 버전
 			               'STYLES' : 'line ', // 2. 버전
-			               'LAYERS' : 'Project:tl_bjd', // 3. 작업공간:레이어 명
-			               'BBOX' : '1.3873946E7,3906626.5,1.4428045E7,4670269.5', 
+			               'LAYERS' : layer, // 3. 작업공간:레이어 명
+			               'BBOX' : bbox, 
 			               'SRS' : 'EPSG:3857', // SRID
 			               'FORMAT' : "image/png", // 포맷
-			               'CQL_FILTER' : "bjd_nm='"+bjd+"'"
+			               'CQL_FILTER' : cql
 			            },
 			            serverType : 'geoserver'
 			         })
 			});
 			map.addLayer(colorWms); // 맵 객체에 레이어를 추가함
+			
+			$.ajax({
+				url: "./getCenter.do",
+				type: "post",
+				data: {'filter' : filter , 'type':type},
+				dataType : 'json',
+				success: function(result){
+					var bbox = result.bbox;
+					map.getView().fit(bbox);
+				},
+				error: function(request, status, error){ //통신오류
+					console.log("중심 이동 에러 발생");
+				}
+			});
 			
 		});
 		

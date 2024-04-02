@@ -32,7 +32,7 @@ public class ServletDAO extends EgovComAbstractDAO {
 		return selectList("servlet.bjd",sgg);
 	}
 
-	public Map<String, Double> center(Map<String, String> where) {
+	public Map<String, String> center(Map<String, String> where) {
 		return session.selectOne("servlet.center",where);
 	}
 

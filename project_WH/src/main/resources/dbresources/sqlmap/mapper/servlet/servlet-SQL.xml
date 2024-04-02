@@ -19,7 +19,7 @@
 	</select>
 	
 	<select id="center" resultType="HashMap" parameterType="Map">
-	SELECT st_x(st_centroid(geom)) as x, st_y(st_centroid(geom)) as y 
+	select ST_AsGeoJSON(ST_EXTENT(geom), 9, 1) 
 	<if test='type.equals("sd") ' >
 		FROM public.tl_sd
 	</if>
@@ -37,7 +37,7 @@
 			sgg_nm = #{filter}
 		</if>
 		<if test='type.equals("bjd") ' >
-			bjd_nm = #{filter}
+			bjd_cd = #{filter}
 		</if>
 	</where>
 	</select>

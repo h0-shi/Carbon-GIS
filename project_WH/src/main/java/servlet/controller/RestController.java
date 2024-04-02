@@ -41,12 +41,14 @@ public class RestController {
 	}
 	
 	@PostMapping("/getCenter.do")
-	public Map<String, Double> getCenter(String filter, String type){
+	public String getCenter(String filter, String type){
 		Map<String, String> where = new HashMap<String, String>();
 		where.put("type", type);
 		where.put("filter", filter);
-		Map<String, Double> center = servletService.center(where);
-		return center;
+		
+		Map<String, String> center = servletService.center(where);
+		String bBox = center.get("st_asgeojson");
+		return bBox;
 	}
 	
 	@PostMapping("/dbInsert.do")
