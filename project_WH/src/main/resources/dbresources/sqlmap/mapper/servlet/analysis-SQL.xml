@@ -5,4 +5,8 @@
 		select sum(usage) from c1_sd
 	</select>
 	
+	<select id="sdTotal" resultType="servletVo">
+		select sd_nm, usage from c1_sd
+	</select>
+	
 </mapper>

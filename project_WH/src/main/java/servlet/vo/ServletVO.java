@@ -10,6 +10,7 @@ public class ServletVO {
 
 	private String sd_nm, sgg_nm, bjd_nm;
 	private int sd_cd,sgg_cd,bjd_cd;
+	private long usage;
 
 	public String getSd_nm() {
 		return sd_nm;
@@ -57,6 +58,14 @@ public class ServletVO {
 
 	public void setBjd_cd(int bjd_cd) {
 		this.bjd_cd = bjd_cd;
+	}
+
+	public long getUsage() {
+		return usage;
+	}
+
+	public void setUsage(long usage) {
+		this.usage = usage;
 	}
 
 }
