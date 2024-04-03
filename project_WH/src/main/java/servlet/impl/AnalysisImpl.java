@@ -26,4 +26,9 @@ public class AnalysisImpl implements AnalysisService {
 		return analysisDAO.sdTotal();
 	}
 
+	@Override
+	public List<ServletVO> getUsage(String filter, String type) {
+		return analysisDAO.getUsage(filter, type);
+	}
+
 }

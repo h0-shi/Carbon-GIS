@@ -229,7 +229,7 @@
 			
 			//드롭다운 가져옴
 			$.ajax({
-				url: "./hover.do",
+				url: "./getDropdown.do",
 				type: "post",
 				data: {'sd' : sd},
 				dataType : 'json',
@@ -300,7 +300,7 @@
 			}
 			
 			$.ajax({
-				url: "./hover.do",
+				url: "./getDropdown.do",
 				type: "post",
 				data: {'sggSel' : sgg },
 				dataType : 'json',
@@ -332,7 +332,7 @@
 			});
 			
 			//coloerd Border 레이어 생성
-			if(sggCd != 0){
+			if(sggCD != 0){
 				filter = "sgg_nm='"+sd+' '+sgg+"'";
 			} else {
 				filter = "sd_nm='"+sd+"'";

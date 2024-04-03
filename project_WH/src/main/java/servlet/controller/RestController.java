@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import servlet.service.AnalysisService;
 import servlet.service.ServletService;
 import servlet.util.Util;
 import servlet.vo.ServletVO;
@@ -27,10 +28,12 @@ public class RestController {
 	
 	@Resource(name = "ServletService")
 	private ServletService servletService;
+	@Resource(name = "AnalysisService")
+	private AnalysisService analysisService;
 	@Autowired
 	Util util;
 	
-	@PostMapping("/hover.do")
+	@PostMapping("/getDropdown.do")
 	public List<ServletVO> hover(String sd, String sggSel) throws IOException {
 		List<ServletVO> sgg = servletService.sgg(sd);
 		if(sggSel != null) {
@@ -82,15 +85,15 @@ public class RestController {
 		return count;//return result; 
 	}
 	
-	@PostMapping("legend.do")
+	@PostMapping("/legend.do")
 	public List<Long> legend(String filter, String type){
 		Map<String, String> where = new HashMap<String, String>();
 		where.put("filter", filter);
+		System.out.println(filter);
 		where.put("type", type);
 		String legendStr = servletService.legend(where);
 		List<Long> legend = util.getLegend(legendStr);
 		return legend;
 	}
-	
 
 }

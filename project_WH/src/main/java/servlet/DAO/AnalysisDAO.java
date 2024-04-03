@@ -22,4 +22,16 @@ public class AnalysisDAO {
 		return session.selectList("analysis.sdTotal");
 	}
 
+	public List<ServletVO> getUsage(String filter, String type) {
+		String mapper ="";
+		if(type.equals("sd")) {
+			mapper = "analysis.sdTotal";
+		} else if(type.equals("sgg")) {
+			mapper = "analysis.sggTotal";
+		} else {
+			mapper = "analysis.bjdTotal";
+		}
+		return session.selectList(mapper,filter);
+	}
+
 }

@@ -10,4 +10,6 @@ public interface AnalysisService {
 
 	List<ServletVO> sdTotal();
 
+	List<ServletVO> getUsage(String filter, String type);
+
 }

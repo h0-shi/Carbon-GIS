@@ -8,7 +8,7 @@ import lombok.Setter;
 @Alias("servletVO")
 public class ServletVO {
 
-	private String sd_nm, sgg_nm, bjd_nm;
+	private String sd_nm, sgg_nm, bjd_nm, usage_nm;
 	private int sd_cd,sgg_cd,bjd_cd;
 	private long usage;
 
@@ -66,6 +66,14 @@ public class ServletVO {
 
 	public void setUsage(long usage) {
 		this.usage = usage;
+	}
+
+	public String getUsage_nm() {
+		return usage_nm;
+	}
+
+	public void setUsage_nm(String usage_nm) {
+		this.usage_nm = usage_nm;
 	}
 
 }

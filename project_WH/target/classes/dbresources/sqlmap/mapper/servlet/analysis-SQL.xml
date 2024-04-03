@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="analysis">
+
 	<select id="total" resultType="long">
 		select sum(usage) from c1_sd
 	</select>
 	
 	<select id="sdTotal" resultType="servletVo">
-		select sd_nm, usage from c1_sd
+		select sd_nm as usage_nm, usage from c1_sd
 	</select>
 	
+	<select id="sggTotal" resultType="servletVo">
+		SELECT substring(sgg_nm,POSITION(' ' in sgg_nm)) as usage_nm, usage from c1_sgg
+		WHERE sd_nm = #{filter}
+	</select>
+	
+	<select id="bjdTotal" resultType="servletVo">
+		SELECT bjd_nm as usage_nm, usage from c1_bjd where sgg_cd = #{filter}
+	</select>
 </mapper>

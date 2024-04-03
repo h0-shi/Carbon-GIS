@@ -71,10 +71,6 @@
 				) AS subquery_alias), 5
 			) as test
 	</select>
-	
-	<select id="total" resultType="long">
-		select sum(usage) from c1_sd
-	</select>
-	
+		
 	
 </mapper>
