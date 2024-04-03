@@ -147,50 +147,63 @@ $(document).ready(function(){
 	text-align: center;
 	overflow-y: auto;
 }
+.container{
+	height: 100%;
+	width: 100%;
+	display: flex;
+}
+.content{
+	height: 100%;
+	width: 100%;
+}
+
 </style>
 </head>
 <body>
 	<div class="container">
-		<h1>탄소 배출(전기) 현황</h1>
-		<hr>
-		<div class="total">
-			배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/>
-		</div>
-		<div class="graph">
-			<div id="chart" class="chart"></div>
-		</div>
-		<div class="table">
-			<div>
-				<table border="1" id="usageTable" class="usageTable">
-					<thead>
-						<tr>
-							<th>시도별</th>
-							<th>사용량</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach items="${sdTotal }" var="sd">
-							<tr>
-								<td>${sd.usage_nm }</td>
-								<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
-							</tr>
-		 				</c:forEach>
-					</tbody>
-				</table>
+		<%@ include file="sidebar.jsp" %>
+		<div class="content">
+			<h1>탄소 배출(전기) 현황</h1>
+			<hr>
+			<div class="total">
+				배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/>
 			</div>
+			<div class="graph">
+				<div id="chart" class="chart"></div>
+			</div>
+			<div class="table">
+				<div>
+					<table border="1" id="usageTable" class="usageTable">
+						<thead>
+							<tr>
+								<th>시도별</th>
+								<th>사용량</th>
+							</tr>
+						</thead>
+						<tbody>
+							<c:forEach items="${sdTotal }" var="sd">
+								<tr>
+									<td>${sd.usage_nm }</td>
+									<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
+								</tr>
+			 				</c:forEach>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<form id="dropdowns">
+				<select id="sd">
+					<option value=0>전체 선택</option>
+					<c:forEach items="${sdnm }" var="sd">
+						<option value="${sd.sd_nm }">${sd.sd_nm }</option>
+					</c:forEach>
+				</select>
+				<select id="sgg">
+					<option value=0>전체 선택</option>
+				</select>
+				<button type="submit">선택</button>
+			</form>
 		</div>
-		<form id="dropdowns">
-			<select id="sd">
-				<option value=0>전체 선택</option>
-				<c:forEach items="${sdnm }" var="sd">
-					<option value="${sd.sd_nm }">${sd.sd_nm }</option>
-				</c:forEach>
-			</select>
-			<select id="sgg">
-				<option value=0>전체 선택</option>
-			</select>
-			<button type="submit">선택</button>
-		</form>
 	</div>
 </body>
 </html>

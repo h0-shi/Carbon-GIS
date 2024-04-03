@@ -110,10 +110,6 @@ body, html{
 	width: 100%;
 	display: flex;
 }
-.container{
-	width: 100%;
-	height: 100%;
-}
 </style>
 </head>
 <body>
