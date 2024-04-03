@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,6 +18,7 @@
 	var data;
 	var chart;
     var options;
+    var count = 0;
       
 	function drawChart(){
 		data = google.visualization.arrayToDataTable([
@@ -25,15 +27,18 @@
 	 			['${sd.usage_nm}',${sd.usage}, "skyblue"],
 	 		</c:forEach>
 	      ]);
-		chart = new google.visualization.BarChart(document.getElementById('myPieChart'));
+		chart = new google.visualization.BarChart(document.getElementById('chart'));
 		chart.draw(data, null);
 	}
 	function addData(usage_nm, usage){
 		data.addRow([usage_nm, usage, "skyblue"]);
 		chart.draw(data, options);
 	}
-	function removeData(){
-		data.removeRow(0);
+	function removeData(count){
+		for (var i = 0; i < count; i++) {
+			console.log(i+"회 삭제")
+			data.removeRow(0);
+		}
 		chart.draw(data, options);
 	}
 	
@@ -43,12 +48,11 @@ $(document).ready(function(){
 	var sgg;
 	var sdCD;
 	var sggCD;
+	count = ${fn:length(sdTotal)};
 	
 	$("#sd").on("change",function(){
 		sd = $("#sd option:selected").text();
 		sdCD = $("#sd option:selected").val();
-		
-		console.log(sd);
 		
 		var sggDd = $("#sgg");
 		var all = $("<option value='0'>전체보기</option>");
@@ -79,7 +83,6 @@ $(document).ready(function(){
 	
 	$("#dropdowns").submit(event,function(){
 		event.preventDefault();
-		var chart = new google.visualization.BarChart(document.getElementById('myPieChart'));
 		
 		sd = $("#sd option:selected").text();
 		sdCD = $("#sd option:selected").val();
@@ -105,20 +108,18 @@ $(document).ready(function(){
 			data: {"filter":filter, "type":type},
 			dataType: "json",
 			success: function(result){
-				console.log(result);
-				console.log(result[0].usage_nm);
-				console.log(result[0].usage);
-				
 				var table = $("#usageTable");
 				$("#usageTable tbody tr td").remove();
 				$("#usageTable tbody tr").remove();
+				removeData(count);
+				count = 0;
 				for (var i = 0; i < result.length; i++) {
 					var td;
 					td = '<tr><td>'+result[i].usage_nm+'</td>';
 					td += '<td>'+result[i].usage.toLocaleString('kr-KR')+'</td></tr>';
 					table.append(td);
-					removeData();
 					addData(result[i].usage_nm, result[i].usage);
+					count++;
 				}
 			},
 			error: function(request, status, error){
@@ -129,6 +130,24 @@ $(document).ready(function(){
 	});
 });
 </script>
+<style type="text/css">
+.chart{
+	width: 100%;
+	height: 400px;
+	border-color: 1px soild black;
+}
+.usageTable{
+	width: 70%;
+	border-color: 1px soild black;
+}
+.table{
+	width: 100%;
+	height: 400px;
+	align-items: center;
+	text-align: center;
+	overflow-y: auto;
+}
+</style>
 </head>
 <body>
 	<div class="container">
@@ -138,25 +157,27 @@ $(document).ready(function(){
 			배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/>
 		</div>
 		<div class="graph">
-			<div id="myPieChart"></div>
+			<div id="chart" class="chart"></div>
 		</div>
-		<div>
-			<table border="1" id="usageTable">
-				<thead>
-					<tr>
-						<th>시도별</th>
-						<th>사용량</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${sdTotal }" var="sd">
+		<div class="table">
+			<div>
+				<table border="1" id="usageTable" class="usageTable">
+					<thead>
 						<tr>
-							<td>${sd.usage_nm }</td>
-							<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
+							<th>시도별</th>
+							<th>사용량</th>
 						</tr>
-	 				</c:forEach>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<c:forEach items="${sdTotal }" var="sd">
+							<tr>
+								<td>${sd.usage_nm }</td>
+								<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
+							</tr>
+		 				</c:forEach>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<form id="dropdowns">
 			<select id="sd">
