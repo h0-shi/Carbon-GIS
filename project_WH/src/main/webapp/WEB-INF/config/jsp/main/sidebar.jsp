@@ -6,15 +6,14 @@
 <meta charset="UTF-8">
 <style type="text/css">
 .sidebar{
-	width: 100%;
+	width: 100px;
 	background-color: black;
-	border-radius: 5px;
+	margin: 0;
+	padding: 0;
 }
 .sidebar ul > li{
 	color: white;
 	display: block;
-	font-size: 1.4rem;
-	font-weight: bold;
 }
 </style>
 </head>

@@ -104,11 +104,12 @@
 </head>
 <body>
 <div class="container">
+	<%@ include file="sidebar.jsp" %>
 	<div class="boxLine" id="boxLine">
    <div id="map" class="map">
    </div>
       <!-- 실제 지도가 표출 될 영역 -->
-      	<div class="draggable legend" id="legend">
+<!--       	<div class="draggable legend" id="legend">
 	   		<table>
 	   			<thead>
 	   			<tr>
@@ -126,7 +127,7 @@
 		   			</tr>
 	   			</tbody>
 	   		</table>
-	   	</div>
+	   	</div> -->
   	 <div>
 	</div>
       <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
