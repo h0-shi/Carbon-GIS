@@ -20,7 +20,7 @@
           layers: [ // 지도에서 사용 할 레이어의 목록을 정희하는 공간이다.
             new ol.layer.Tile({
               source: new ol.source.OSM({
-            	  url: 'http://api.vworld.kr/req/wmts/1.0.0/key/Base/{z}/{y}/{x}.png'   
+            	  url: 'http://api.vworld.kr/req/wmts/1.0.0/17254DD9-A574-399C-A5E5-781211777FFF/Base/{z}/{y}/{x}.png'   
                       // vworld의 지도를 가져온다.
               })
             })
@@ -54,9 +54,14 @@
 </script>
 
 <style>
+body, html{
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
     .map {
       height: 100%;
-      width: auto;
+      width: 100% ;
     }
     
     .olControlAttribution {
@@ -98,49 +103,60 @@
 }
 .boxLine{
 	width: 100%;
-	height: auto;
+	height: 70%;
+}
+.container{
+	height: 100%;
+	width: 100%;
+	display: flex;
+}
+.container{
+	width: 100%;
+	height: 100%;
 }
 </style>
 </head>
 <body>
 <div class="container">
 	<%@ include file="sidebar.jsp" %>
-	<div class="boxLine" id="boxLine">
-   <div id="map" class="map">
-   </div>
-      <!-- 실제 지도가 표출 될 영역 -->
-<!--       	<div class="draggable legend" id="legend">
-	   		<table>
-	   			<thead>
-	   			<tr>
-	   				<th colspan="2">범례입니다아</th>
-	   			</tr>
-	   			<tr>	
-	   				<th>색상</th>
-	   				<th>범위</th>
-	   			</tr>
-	   			</thead>
-	   			<tbody>
+	<div class="content">
+		<div class="boxLine" id="boxLine">
+	   		<div id="map" class="map">
+	   	</div>
+	      <!-- 실제 지도가 표출 될 영역 -->
+	<!--        	<div class="draggable legend" id="legend">
+		   		<table>
+		   			<thead>
 		   			<tr>
-		   				<td class="color"></td>
-		   				<td>숫자~숫자</td>
+		   				<th colspan="2">범례입니다아</th>
 		   			</tr>
-	   			</tbody>
-	   		</table>
-	   	</div> -->
-  	 <div>
+		   			<tr>	
+		   				<th>색상</th>
+		   				<th>범위</th>
+		   			</tr>
+		   			</thead>
+		   			<tbody>
+			   			<tr>
+			   				<td class="color"></td>
+			   				<td>숫자~숫자</td>
+			   			</tr>
+		   			</tbody>
+		   		</table>
+		   	</div> -->
+	  	 <div>
+		</div>
+	      <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
+	      <form action="./main.do" method="get">
+		      <select id="location" name="zip">
+		      	<option value="">기본</option>
+		      	<c:forEach items="${list}" var="row">
+		      	<option value="${row.sd_nm}" >${row.sd_nm}</option>
+		      	</c:forEach>
+		      </select>
+		      <button type="submit">선택</button>
+	      </form>
+	   </div>
 	</div>
-      <button type="button" onclick="javascript:deleteLayerByName('VHYBRID');" name="rpg_1">레이어삭제하기</button>
-      <form action="./main.do" method="get">
-	      <select id="location" name="zip">
-	      	<option value="">기본</option>
-	      	<c:forEach items="${list}" var="row">
-	      	<option value="${row.sd_nm}" >${row.sd_nm}</option>
-	      	</c:forEach>
-	      </select>
-	      <button type="submit">선택</button>
-      </form>
-   </div>
 </div>
 </body>
 </html>

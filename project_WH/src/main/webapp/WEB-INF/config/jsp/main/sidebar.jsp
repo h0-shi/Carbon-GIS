@@ -5,25 +5,47 @@
 <head>
 <meta charset="UTF-8">
 <style type="text/css">
-.sidebar{
-	width: 100px;
-	background-color: black;
+body, html{
+	height: 100%;
+	width: 100%;
 	margin: 0;
-	padding: 0;
 }
-.sidebar ul > li{
-	color: white;
-	display: block;
+.left-side-bar {
+    background-color: #dfdfdf;
+    height: 100%;
+    width: 70px;
+    left: 0;
+    top: 0;
+    margin: 0;
+}
+.left-side-bar > ul li {
+    position: relative;
+}
+.left-side-bar ul {
+    font-weight: bold;
+    text-align: center;
+    padding: 0;
+}
+
+.left-side-bar ul > li > a {
+    display: block;
+    padding: 10px;
+    white-space: nowrap;
+    font-size: x-small;
 }
 </style>
 </head>
 <body>
-<aside class="sidebar">
-	<ul>
-		<li>탄소 지도</li>
-		<li>데이터 통계</li>
-		<li>데이터 삽입</li>
-	</ul>
-</aside>
+  <div class="left-side-bar">
+        <div class="status-ico">
+            <span>▶</span>
+            <span>▼</span>
+        </div>
+
+        <ul>
+            <li><a href="./hover.do">탄소공간지도</a></li>
+            <li><a href="./analysis.do">탄소통계</a></li>
+        </ul>
+    </div>
 </body>
 </html>

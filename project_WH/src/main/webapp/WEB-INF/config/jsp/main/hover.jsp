@@ -14,7 +14,7 @@
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <style>
 .map {
-	height: 600px;
+	height: 100%;
 	width: 100%;
 }
 
@@ -68,10 +68,6 @@
 .fill4{
 	background-color: #f80000;
 }
-.boxLine{
-	width: 100%;
-	height: auto;
-}
 .overLay{
 	width: 280px;
 	height: 70px;
@@ -81,6 +77,15 @@
 	border-radius: 5px;
 	justify-content: center;
   	align-items: center;
+}
+.boxLine{
+	width: 100%;
+	height: 85%;
+}
+.container{
+	height: 100%;
+	width: 100%;
+	display: flex;
 }
 </style>
 <script>
@@ -544,71 +549,74 @@
 </head>
 <body>
 	<div class="container">
-	   <div class="boxLine" id="boxLine">
-		   <div id="map" class="map">
-		   </div>
-		      <!-- 실제 지도가 표출 될 영역 -->
-		      	<div class="draggable legend" id="legend">
-			   		<table id="legendTable">
-			   			<thead>
-			   			<tr>
-			   				<th colspan="2">범례입니다아</th>
-			   			</tr>
-			   			<tr>	
-			   				<th>색상</th>
-			   				<th>범위</th>
-			   			</tr>
-			   			</thead>
-			   			<tbody>
+		<%@ include file="sidebar.jsp" %>
+		<div class="content">
+		   <div class="boxLine" id="boxLine">
+			   <div id="map" class="map">
+			   </div>
+			      <!-- 실제 지도가 표출 될 영역 -->
+			      	<div class="draggable legend" id="legend">
+				   		<table id="legendTable">
+				   			<thead>
 				   			<tr>
-				   				<td class="color"></td>
-				   				<td>숫자~숫자</td>
+				   				<th colspan="2">범례입니다아</th>
 				   			</tr>
-			   			</tbody>
-			   		</table>
-			   	</div>
-		  	 <div>
+				   			<tr>	
+				   				<th>색상</th>
+				   				<th>범위</th>
+				   			</tr>
+				   			</thead>
+				   			<tbody>
+					   			<tr>
+					   				<td class="color"></td>
+					   				<td>숫자~숫자</td>
+					   			</tr>
+				   			</tbody>
+				   		</table>
+				   	</div>
+			  	 <div>
+				</div>
+		</div>
+		   
+		   <div id="selectedLoc">
+		   선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
+		   </div>
+		   	
+		   <div>
+		      <button type="button" id="addLayer" name="rpg_1">레이어추가하기</button>
+		      <button type="button" id="delLayer" name="rpg_1">레이어삭제하기</button>
+		      
+		      <form class="dropdowns" id="dropdowns">
+			    <select id="sd" name="sd">
+			    	<option value="">전체보기</option>
+			    	<c:forEach items="${list}" var="row">
+			    	<option value="${row.sd_cd}"
+			    	<c:if test="${row.sd_nm eq param.sd }">selected="selected"</c:if>
+			    	>${row.sd_nm}</option>
+			    	</c:forEach>
+			    </select>
+			    
+				    <select id="sgg" name="sgg">
+				    	<option value="">전체보기</option>
+				    <c:forEach items="${sgg }" var="row">
+				    	<option value="${row.sgg_nm}">${row.sgg_nm}</option>
+				    </c:forEach>
+				    </select>
+				 
+				    <select id="bjd">
+				    	<option value="">전체보기</option>
+				    <c:forEach items="${bjd }" var="row">
+				    	<option value="${row.bjd_nm}">${row.bjd_nm}</option>
+				    </c:forEach>
+				    </select>
+			    <button type="submit">선택</button>
+		      </form>
+		      
+		      <form id="file" enctype="multipart/form-data">
+		      	<input type="file" name="file">
+		      	<button type="button" id="fileBtn">업로드</button>
+		      </form>
 			</div>
-	</div>
-	   
-	   <div id="selectedLoc">
-	   선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
-	   </div>
-	   	
-	   <div>
-	      <button type="button" id="addLayer" name="rpg_1">레이어추가하기</button>
-	      <button type="button" id="delLayer" name="rpg_1">레이어삭제하기</button>
-	      
-	      <form class="dropdowns" id="dropdowns">
-		    <select id="sd" name="sd">
-		    	<option value="">전체보기</option>
-		    	<c:forEach items="${list}" var="row">
-		    	<option value="${row.sd_cd}"
-		    	<c:if test="${row.sd_nm eq param.sd }">selected="selected"</c:if>
-		    	>${row.sd_nm}</option>
-		    	</c:forEach>
-		    </select>
-		    
-			    <select id="sgg" name="sgg">
-			    	<option value="">전체보기</option>
-			    <c:forEach items="${sgg }" var="row">
-			    	<option value="${row.sgg_nm}">${row.sgg_nm}</option>
-			    </c:forEach>
-			    </select>
-			 
-			    <select id="bjd">
-			    	<option value="">전체보기</option>
-			    <c:forEach items="${bjd }" var="row">
-			    	<option value="${row.bjd_nm}">${row.bjd_nm}</option>
-			    </c:forEach>
-			    </select>
-		    <button type="submit">선택</button>
-	      </form>
-	      
-	      <form id="file" enctype="multipart/form-data">
-	      	<input type="file" name="file">
-	      	<button type="button" id="fileBtn">업로드</button>
-	      </form>
 		</div>
    </div>
 </body>
