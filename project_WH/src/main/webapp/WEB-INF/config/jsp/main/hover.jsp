@@ -36,11 +36,9 @@
   font-size: x-small;
   background-color: white;
   position: absolute;
-  left: 50px;
-  top: 50px;
-  
   user-select: none;
-  
+  left:calc(100% - 180px);
+  top:calc(100% - 190px);
   /*  drag cursor   */
   cursor: grab;
 }
@@ -81,6 +79,7 @@
 .boxLine{
 	width: 100%;
 	height: 85%;
+	position: relative;
 }
 .container{
 	height: 100%;

@@ -13,11 +13,24 @@ body, html{
 .left-side-bar {
     background-color: #dfdfdf;
     height: 100%;
-    width: 70px;
+    width: 200px;
     left: 0;
     top: 0;
     margin: 0;
 }
+.category{
+	height: 100%;
+	width: 50%;
+	float: left;
+	background-color: white;
+}
+.detailMenu{
+	height: 100%;
+	width: 50%;
+	float: left;
+	background-color: black;
+}
+
 .left-side-bar > ul li {
     position: relative;
 }
@@ -38,14 +51,28 @@ body, html{
 <body>
   <div class="left-side-bar">
         <div class="status-ico">
-            <span>▶</span>
-            <span>▼</span>
+        	탄소 지도 뭐시기
         </div>
-
-        <ul>
-            <li><a href="./hover.do">탄소공간지도</a></li>
-            <li><a href="./analysis.do">탄소통계</a></li>
-        </ul>
+		<div class="category">
+	        <ul>
+	            <li><a href="./hover.do">탄소공간지도</a></li>
+	            <li><a href="./analysis.do">탄소통계</a></li>
+	        </ul>
+		</div>
+		<div class="detailMenu">
+			<select>
+				<option>가
+				<option>나
+			</select>
+			<select>
+				<option>가
+				<option>나
+			</select>
+			<select>
+				<option>가
+				<option>나
+			</select>
+		</div>
     </div>
 </body>
 </html>
