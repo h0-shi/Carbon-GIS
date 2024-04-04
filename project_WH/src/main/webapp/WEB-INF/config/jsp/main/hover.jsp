@@ -10,83 +10,12 @@
 <title>브이월드 오픈API</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 <script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
-<style>
-.map {
-	height: 100%;
-	width: 100%;
-}
-
-.olControlAttribution {
-	right: 20px;
-}
-.olControlLayerSwitcher {
-	right: 20px;
-	top: 20px;
-   }   
- .legend{
-  width: 170px;
-  height: 180px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 2px;
-  font-size: x-small;
-  background-color: white;
-  position: absolute;
-  user-select: none;
-  left:calc(100% - 180px);
-  top:calc(100% - 190px);
-  /*  drag cursor   */
-  cursor: grab;
-}
-
-.legend:active {
-  cursor: grabbing;
-}
-
-.color{
-	width: 25px;
-	height: 20px;
-}
-.fill0{
-	background-color: #fffb95;
-}
-.fill1{
-	background-color: #f8baba;
-}
-.fill2{
-	background-color: #f87c7c;
-}
-.fill3{
-	background-color: #f83e3e;
-}
-.fill4{
-	background-color: #f80000;
-}
-.overLay{
-	width: 280px;
-	height: 70px;
-	padding-top: 20px;
-	padding-left: 20px;
-	background-color: white;
-	border-radius: 5px;
-	justify-content: center;
-  	align-items: center;
-}
-.boxLine{
-	width: 100%;
-	height: 85%;
-	position: relative;
-}
-.container{
-	height: 100%;
-	width: 100%;
-	display: flex;
-}
-</style>
+<link href="<c:url value='/resources/'/>css/sidebar.css" rel="stylesheet" type="text/css" >
+<link href="<c:url value='/resources/'/>css/gisMap.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <script>
    $(document).ready(function() {
 	   //변수들 모음
@@ -158,7 +87,6 @@
 			sggCD = $('#sgg option:selected').val();
 			sgg = $('#sgg option:selected').text();
 			
-			
 			$(".pop").remove();
 		    var view = map.getView();
 		    var viewResolution = view.getResolution();
@@ -184,7 +112,7 @@
 						let content = document.createElement("div");
 						content.classList.add('ol-popup','pop');
 						
-						if(sggCD == 0){
+						if(sggCD == 1){
 							ele = jsonObj.features[0].properties.sgg_nm;
 							$("#selectedLoc").text("선택한 위치 : "+ele+" | "+"사용량 : "+usage);
 							content.innerHTML = "<div class='overLay'><span> 선택 지역 : "+ele+'<br>사용량 : '+usage+'</span></div>';
@@ -219,11 +147,13 @@
 			filter = "sd_nm='"+sd+"'";
 			
 			sggDd.empty();
-			var all = $("<option value='0'>전체보기</option>");
+			var all = $("<option value='1'>전체보기</option>");
 			sggDd.append(all);
+			var disabled = $("<option value='0' disabled selected >시/군/구 선택</option>");
+			sggDd.append(disabled);
 			
 			//전체 선택시 줌 아웃
-			if(sdCD.length < 1){
+			if(sdCD == 1){
 				var center = ol.proj.fromLonLat([128.4, 35.7]);
 				map.getView().setCenter(center);
 				map.getView().setZoom(7)
@@ -287,15 +217,17 @@
 		//시군구 변경시 법정동 가져옴
 		$("#sgg").on('change',function(){
 			sgg = $("#sgg option:selected").text();
-			sggCd = $("#sgg option:selected").val();
+			sggCD = $("#sgg option:selected").val();
 			
 			var bjdDd = $("#bjd");
 			bjdDd.empty();
-			var all = $("<option value='0'>전체보기</option>");
+			var all = $("<option value='1'>전체보기</option>");
 			bjdDd.append(all);
+			var disabled = $("<option value='0' disabled selected >법정동 선택</option>");
+			bjdDd.append(disabled);
 
-			//법정동 리스트 출력
-			if(sggCd != 0){
+			//법정동 리스트
+			if(sggCD != 1){
 				filter = sd+' '+sgg;
 				type = 'sgg';
 			} else {
@@ -336,7 +268,7 @@
 			});
 			
 			//coloerd Border 레이어 생성
-			if(sggCD != 0){
+			if(sggCD != 1){
 				filter = "sgg_nm='"+sd+' '+sgg+"'";
 			} else {
 				filter = "sd_nm='"+sd+"'";
@@ -369,7 +301,7 @@
 			var cql;
 			var layer;
 			var bbox;
-			if(bjdCD!=0){
+			if(bjdCD != 1){
 				filter = bjdCD;
 				type = 'bjd';
 				cql = "bjd_nm='"+bjd+"'";
@@ -430,9 +362,14 @@
 			let sd = $("#sd option:selected").text();
 			let sgg = $("#sgg option:selected").text();
 			let bjd = $("#bjd option:selected").text();
-			
-			if(sdCD.length<1){
-				alert("시/도를 선택해주세요");
+			if(sdCD == 0){
+				alert("시/도를 선택해주세요.");
+				return false;
+			} else if(sggCD == 0){
+				alert("시/군/구를 선택해주세요.");
+				return false;
+			} else if(bjdCD == 0){
+				alert("법정동을 선택해주세요.");
 				return false;
 			}
 			
@@ -442,17 +379,17 @@
 			var layer;
 			var type;
 			
-			if(bjdCD != 0){
+			if(bjdCD != 1){
 				layer = 'Project:bjd_view';
 				bBox = '1.387148932991382E7,3910407.083927817,1.46800091844669E7%,666488.829376992';
 				params = 'sgg_cd:'+sggCD;
 				filter ="bjd_nm='"+bjd+"'";
-			} else if (sggCD != 0) {
+			} else if (sggCD != 1) {
 				layer = 'Project:bjd_view';
 				bBox = '1.387148932991382E7,3910407.083927817,1.46800091844669E7%,666488.829376992';
 				params = 'sgg_cd:'+sggCD;
 				filter ="";
-			} else if (sdCD != 0){
+			} else if (sdCD != 1){
 				layer = 'Project:sgg_view';
 				bBox = '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997';
 				params = 'sgg_cd:'+sdCD;
@@ -476,7 +413,7 @@
 			});
 			map.addLayer(legend);
 			
-			if(sggCD==0){
+			if(sggCD==1){
 				//type = 사용 할 테이블
 				type = "sgg";
 				//filter = where 조건
@@ -547,8 +484,59 @@
 </script>
 </head>
 <body>
-	<div class="container">
-		<%@ include file="sidebar.jsp" %>
+	<div class="gisContainer">
+		<!-- 사이드바 -->
+		 <div class="sidebar">
+	        <div class="sideTop">
+	        	탄소 지도 뭐시기
+	        	   <div id="selectedLoc">
+				   		선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
+				   </div>
+	        </div>
+			<div class="sideCategory">
+		        <ul>
+		            <li>
+		            	<a href="./hover.do">
+		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/map.png">
+		           		<br>탄소공간지도
+		           		</a>
+		           	</li>
+		            <li>
+		           		 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		           		 <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/upload.png">
+		           		 <br>데이터 업로드
+		           		 </a>
+		           	</li>
+		            <li>
+			            <a href="./analysis.do">
+			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/analytics.png">
+			            <br>탄소 통계
+			            </a>
+			        </li>
+		        </ul>
+			</div>
+			<div class="sideDetail">
+				<form class="dropdowns" id="dropdowns">
+				    <select id="sd" name="sd">
+				    	<option value="0" disabled selected>시/도 선택</option>
+				    	<option value="1">전체보기</option>
+				    	<c:forEach items="${list}" var="row">
+				    		<option value="${row.sd_cd}"
+				    	<c:if test="${row.sd_nm eq param.sd }">selected="selected"</c:if>
+				    		>${row.sd_nm}</option>
+				    	</c:forEach>
+				    </select>
+					    <select id="sgg" name="sgg">
+					    	<option value="0" disabled selected>시/군/구 선택</option>
+					    </select>
+					    <select id="bjd">
+					    	<option value="0" disabled selected>법정동 선택</option>
+					    </select>
+				    <button type="submit">선택</button>
+		      	</form>
+			</div>
+	    </div>
+		
 		<div class="content">
 		   <div class="boxLine" id="boxLine">
 			   <div id="map" class="map">
@@ -576,45 +564,29 @@
 			  	 <div>
 				</div>
 		</div>
+		<!-- Modal -->
+			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h1 class="modal-title fs-5" id="staticBackdropLabel">데이터 업로드</h1>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body">
+					<form id="file" enctype="multipart/form-data">
+			      		<input type="file" name="file">
+			      		<button type="button" id="fileBtn">업로드</button>
+			      	</form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 		   
-		   <div id="selectedLoc">
-		   선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
-		   </div>
-		   	
 		   <div>
-		      <button type="button" id="addLayer" name="rpg_1">레이어추가하기</button>
-		      <button type="button" id="delLayer" name="rpg_1">레이어삭제하기</button>
-		      
-		      <form class="dropdowns" id="dropdowns">
-			    <select id="sd" name="sd">
-			    	<option value="">전체보기</option>
-			    	<c:forEach items="${list}" var="row">
-			    	<option value="${row.sd_cd}"
-			    	<c:if test="${row.sd_nm eq param.sd }">selected="selected"</c:if>
-			    	>${row.sd_nm}</option>
-			    	</c:forEach>
-			    </select>
-			    
-				    <select id="sgg" name="sgg">
-				    	<option value="">전체보기</option>
-				    <c:forEach items="${sgg }" var="row">
-				    	<option value="${row.sgg_nm}">${row.sgg_nm}</option>
-				    </c:forEach>
-				    </select>
-				 
-				    <select id="bjd">
-				    	<option value="">전체보기</option>
-				    <c:forEach items="${bjd }" var="row">
-				    	<option value="${row.bjd_nm}">${row.bjd_nm}</option>
-				    </c:forEach>
-				    </select>
-			    <button type="submit">선택</button>
-		      </form>
-		      
-		      <form id="file" enctype="multipart/form-data">
-		      	<input type="file" name="file">
-		      	<button type="button" id="fileBtn">업로드</button>
-		      </form>
+		   
 			</div>
 		</div>
    </div>

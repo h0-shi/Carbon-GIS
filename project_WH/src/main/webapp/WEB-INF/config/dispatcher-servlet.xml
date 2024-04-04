@@ -9,6 +9,7 @@
 		
 	<mvc:annotation-driven/>
 	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/image/**" location="/resources/image/" />
 	
     <context:component-scan base-package="servlet">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>

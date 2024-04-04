@@ -1,0 +1,80 @@
+@charset "UTF-8";
+body, html{
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+.olControlAttribution {
+	right: 20px;
+}
+.olControlLayerSwitcher {
+	right: 20px;
+	top: 20px;
+}   
+ .legend{
+  width: 170px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-size: x-small;
+  background-color: white;
+  position: absolute;
+  user-select: none;
+  left:calc(100% - 180px);
+  top:calc(100% - 190px);
+  /*  drag cursor   */
+  cursor: grab;
+}
+.legend:active {
+  cursor: grabbing;
+}
+
+.color{
+	width: 25px;
+	height: 20px;
+}
+.fill0{
+	background-color: #fffb95;
+}
+.fill1{
+	background-color: #f8baba;
+}
+.fill2{
+	background-color: #f87c7c;
+}
+.fill3{
+	background-color: #f83e3e;
+}
+.fill4{
+	background-color: #f80000;
+}
+.overLay{
+	width: 280px;
+	height: 70px;
+	padding-top: 20px;
+	padding-left: 20px;
+	background-color: white;
+	border-radius: 5px;
+	justify-content: center;
+  	align-items: center;
+  	z-index: 0;
+}
+.gisContainer{
+	height: 100%;
+	width: 100%;
+	display: flex;
+}
+.content{
+	height: 100%;
+	width: 100%;
+	flex: 1;
+}
+.map{
+	height: 100%
+}
+.boxLine{
+	height: 100%
+}

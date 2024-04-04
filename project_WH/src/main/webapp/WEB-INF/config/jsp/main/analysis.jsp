@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %> 
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +10,9 @@
 <title>통계페이지</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<link href="<c:url value='/resources/'/>css/sidebar.css" rel="stylesheet" type="text/css" >
 <script type="text/javascript">
 	google.charts.load('current', {packages: ['corechart']});
 	google.charts.setOnLoadCallback(drawChart);
@@ -36,7 +39,6 @@
 	}
 	function removeData(count){
 		for (var i = 0; i < count; i++) {
-			console.log(i+"회 삭제")
 			data.removeRow(0);
 		}
 		chart.draw(data, options);
@@ -55,8 +57,10 @@ $(document).ready(function(){
 		sdCD = $("#sd option:selected").val();
 		
 		var sggDd = $("#sgg");
-		var all = $("<option value='0'>전체보기</option>");
+		var disabled = $("<option value='0' disabled selected >시/군/구 선택</option>");
+		var all = $("<option value='1'>전체보기</option>");
 		sggDd.empty();
+		sggDd.append(disabled);
 		sggDd.append(all);
 		
 		$.ajax({
@@ -83,18 +87,26 @@ $(document).ready(function(){
 	
 	$("#dropdowns").submit(event,function(){
 		event.preventDefault();
-		
 		sd = $("#sd option:selected").text();
 		sdCD = $("#sd option:selected").val();
 		sgg = $("#sgg option:selected").text();
 		sggCD = $("#sgg option:selected").val();
 		
+		if(sdCD == 0){
+			alert("시/도를 선택해주세요.");
+			return false;
+		} else if(sggCD == 0){
+			alert("시군구를 선택해주세요.");
+			return false;
+		}
+		
+		
 		var filter;
 		var type;
-		if(sggCD != 0){
+		if(sggCD != 1){
 			filter = sggCD;
 			type = "bjd";
-		} else if(sdCD != 0){
+		} else if(sdCD != 1){
 			filter = sd;
 			type = "sgg";
 		} else {
@@ -140,32 +152,80 @@ $(document).ready(function(){
 	width: 70%;
 	border-color: 1px soild black;
 }
+.total{
+	height: 20%;
+}
 .table{
 	width: 100%;
-	height: 400px;
-	align-items: center;
+	height: 40%;
+	margin: 0;
+	display: block;
+	justify-content: center;
 	text-align: center;
 	overflow-y: auto;
 }
-.container{
+.aContainer{
 	height: 100%;
 	width: 100%;
+	top: 50px;
 	display: flex;
 }
 .content{
 	height: 100%;
 	width: 100%;
+	flex: 1;
 }
-
+.graph{
+	height: 40%;
+}
 </style>
 </head>
 <body>
-	<div class="container">
-		<%@ include file="sidebar.jsp" %>
+	<div class="aContainer">
+		 <div class="sidebar">
+			<div class="sideCategory">
+		        <ul>
+		            <li>
+		            	<a href="./hover.do">
+		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/map.png">
+		           		<br>탄소공간지도
+		           		</a>
+		           	</li>
+		            <li>
+		           		 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+		           		 <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/upload.png">
+		           		 <br>데이터 업로드
+		           		 </a>
+		           	</li>
+		            <li>
+			            <a href="./analysis.do">
+			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/analytics.png">
+			            <br>탄소 통계
+			            </a>
+			        </li>
+		        </ul>
+			</div>
+			<div class="sideDetail">
+				<form id="dropdowns">
+					<select id="sd">
+						<option value=0 selected disabled>시/도 선택</option>
+						<option value=1>전체 선택</option>
+						<c:forEach items="${sdnm }" var="sd">
+							<option value="${sd.sd_nm }">${sd.sd_nm }</option>
+						</c:forEach>
+					</select>
+					<select id="sgg">
+						<option value=0 selected disabled>시/군/구 선택</option>
+					</select>
+					<button type="submit">선택</button>
+				</form>
+			</div>
+	    </div>
+		
 		<div class="content">
-			<h1>탄소 배출(전기) 현황</h1>
-			<hr>
 			<div class="total">
+				<h1>탄소 배출(전기) 현황</h1>
+				<hr>
 				배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/>
 			</div>
 			<div class="graph">
@@ -191,18 +251,6 @@ $(document).ready(function(){
 					</table>
 				</div>
 			</div>
-			<form id="dropdowns">
-				<select id="sd">
-					<option value=0>전체 선택</option>
-					<c:forEach items="${sdnm }" var="sd">
-						<option value="${sd.sd_nm }">${sd.sd_nm }</option>
-					</c:forEach>
-				</select>
-				<select id="sgg">
-					<option value=0>전체 선택</option>
-				</select>
-				<button type="submit">선택</button>
-			</form>
 		</div>
 	</div>
 </body>
