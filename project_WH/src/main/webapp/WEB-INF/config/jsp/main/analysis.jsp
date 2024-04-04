@@ -30,8 +30,11 @@
 	 			['${sd.usage_nm}',${sd.usage}, "skyblue"],
 	 		</c:forEach>
 	      ]);
+		options = {'title':'How Much Pizza I Ate Last Night',
+                'width': 700,
+                'height':300};
 		chart = new google.visualization.BarChart(document.getElementById('chart'));
-		chart.draw(data, null);
+		chart.draw(data, options);
 	}
 	function addData(usage_nm, usage){
 		data.addRow([usage_nm, usage, "skyblue"]);
@@ -153,7 +156,10 @@ $(document).ready(function(){
 	border-color: 1px soild black;
 }
 .total{
-	height: 20%;
+	height: auto;
+}
+.graph{
+	height: calc(40% - 6px);
 }
 .table{
 	width: 100%;
@@ -163,24 +169,23 @@ $(document).ready(function(){
 	justify-content: center;
 	text-align: center;
 	overflow-y: auto;
+	border: 3px solid black;
 }
 .aContainer{
-	height: 100%;
-	width: 100%;
-	top: 50px;
 	display: flex;
+	height: calc(100vh - 50px);
+	width: 100%;
 }
 .content{
-	height: 100%;
-	width: 100%;
-	flex: 1;
+	flex: 1 1 auto;
 }
-.graph{
-	height: 40%;
+.table table{
+	height: auto;
 }
 </style>
 </head>
 <body>
+	<%@ include file="topNav.jsp" %>
 	<div class="aContainer">
 		 <div class="sidebar">
 			<div class="sideCategory">
@@ -197,7 +202,7 @@ $(document).ready(function(){
 		           		 <br>데이터 업로드
 		           		 </a>
 		           	</li>
-		            <li>
+		            <li class="selectedCate">
 			            <a href="./analysis.do">
 			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/analytics.png">
 			            <br>탄소 통계
@@ -232,24 +237,22 @@ $(document).ready(function(){
 				<div id="chart" class="chart"></div>
 			</div>
 			<div class="table">
-				<div>
-					<table border="1" id="usageTable" class="usageTable">
-						<thead>
+				<table border="1" id="usageTable" class="usageTable">
+					<thead>
+						<tr>
+							<th>시도별</th>
+							<th>사용량</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${sdTotal }" var="sd">
 							<tr>
-								<th>시도별</th>
-								<th>사용량</th>
+								<td>${sd.usage_nm }</td>
+								<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
 							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${sdTotal }" var="sd">
-								<tr>
-									<td>${sd.usage_nm }</td>
-									<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
-								</tr>
-			 				</c:forEach>
-						</tbody>
-					</table>
-				</div>
+		 				</c:forEach>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>

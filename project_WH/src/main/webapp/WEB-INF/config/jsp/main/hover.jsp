@@ -144,13 +144,18 @@
 			sdCD = $("#sd option:selected").val();
 			//sgg 드롭다운			
 			var sggDd = $("#sgg");
+			var bjdDd = $("#bjd");
 			filter = "sd_nm='"+sd+"'";
 			
 			sggDd.empty();
+			bjdDd.empty();
 			var all = $("<option value='1'>전체보기</option>");
 			sggDd.append(all);
+			bjdDd.append(all);
 			var disabled = $("<option value='0' disabled selected >시/군/구 선택</option>");
 			sggDd.append(disabled);
+			disabled = $("<option value='0' disabled selected >법정동 선택</option>");
+			bjdDd.append(disabled);
 			
 			//전체 선택시 줌 아웃
 			if(sdCD == 1){
@@ -310,7 +315,7 @@
 			} else {
 				filter = sd+' '+sgg;
 				type = 'sgg';
-				cql = "sgg_nm='"+sd+' '+sgg+"'";
+				cql = "sgg_nm='"+filter+"'";
 				layer = 'Project:c1_sgg';
 				bbox = '1.386872E7,3906626.5,1.4428071E7,4670269.5';
 			}
@@ -362,7 +367,7 @@
 			let sd = $("#sd option:selected").text();
 			let sgg = $("#sgg option:selected").text();
 			let bjd = $("#bjd option:selected").text();
-			if(sdCD == 0){
+			if(sdCD == 0 || sdCD == 1){
 				alert("시/도를 선택해주세요.");
 				return false;
 			} else if(sggCD == 0){
@@ -484,18 +489,13 @@
 </script>
 </head>
 <body>
+	<%@ include file="topNav.jsp" %>
 	<div class="gisContainer">
 		<!-- 사이드바 -->
 		 <div class="sidebar">
-	        <div class="sideTop">
-	        	탄소 지도 뭐시기
-	        	   <div id="selectedLoc">
-				   		선택한 위치 : &ensp;&ensp;&ensp;&ensp;&ensp; | 사용량 :
-				   </div>
-	        </div>
 			<div class="sideCategory">
 		        <ul>
-		            <li>
+		            <li class="selectedCate">
 		            	<a href="./hover.do">
 		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/map.png">
 		           		<br>탄소공간지도

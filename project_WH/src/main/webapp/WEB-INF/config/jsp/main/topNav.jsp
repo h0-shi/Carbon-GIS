@@ -12,14 +12,22 @@
     max-width: 100%;
     background-position: center;
     background-size: cover;
-    background-color: #333333;color: white;
+    background-color: #333333;
     z-index: 1;
+    display: flex;
+    justify-content: center;
+}
+.head img{
+	width: 300px;
+	margin: auto;
+	padding: 0; 
+	text-align: left;
 }
 </style>
 </head>
 <body>
 	<div class="head">
-        	탄소 지도 뭐시기
+        <img class="icon" alt="로고" class="logo" src="<c:url value='/resources/'/>/image/logo.png">
    	</div>
 </body>
 </html>

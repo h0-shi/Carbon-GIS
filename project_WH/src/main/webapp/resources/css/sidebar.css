@@ -6,23 +6,24 @@ body, html{
 	padding: 0;
 }
 .sidebar{
-    background-color: #dfdfdf;
-    top: 50px;
     width: 270px;
+    height: calc(100vh - 50px);
     left: 0;
     top: 0;
     margin: 0;
+    background-color: #dfdfdf;
+    flex: 0 0 auto;
 }
 .sideCategory{
-	height: calc(100% - 72px);
-	width: 90px;
+	width: 33%;
+	height: 100%;
 	float: left;
 	border: 1px solid grey;
 	background-color: white;
 }
 .sideDetail{
-	height: calc(100% - 72px);
-	width: 180px;
+	width: 67%;
+	height: 100%;
 	float: left;
 	background-color: white;
 	border: 1px solid grey;
@@ -51,7 +52,6 @@ body, html{
 	height: 80px;
     position: relative;
     padding: 0;
-    border-top: 1px solid grey;
     border-bottom: 1px solid grey;
     display: flex;
     justify-content: center;
@@ -59,6 +59,9 @@ body, html{
 }
 .sideCategory > ul > li :hover{
 	filter: drop-shadow(5px 3px 3px grey); 
+}
+.selectedCate{
+	filter: drop-shadow(5px 3px 3px grey);
 }
 .sideCategory ul {
     font-weight: bold;
@@ -75,13 +78,6 @@ body, html{
     text-decoration: none;
     color: black;
 }
-/*
-.nav{
-	height: 72px;
-	width: 100%;
-	overflow: hidden;
-}
-*/
 .icon{
 	width: 50px;
 	height: auto;
