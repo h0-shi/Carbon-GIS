@@ -9,21 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import servlet.service.ServletService;
+import servlet.impl.ServletImpl;
 
 @ServerEndpoint("/webSocket")
 public class WebSocket {
-	
-	@Resource(name = "ServletService")
-	private ServletService servletService;
 
 	@OnMessage
 	public void onMessage(Session session, String fileName) throws IOException {
+		ServletImpl servletService = new ServletImpl();
 		String root = "C:\\eGovFrameDev-3.10.0-64bit\\workspace\\Carbon-GIS\\project_WH\\src\\main\\webapp\\resources\\upload\\";
 		FileReader reader = new FileReader(root+fileName);
 		BufferedReader bf = new BufferedReader(reader);
@@ -45,13 +42,13 @@ public class WebSocket {
 		    list.add(map);
 		    if(--pageSize <= 0 ) {
 		    	int result = servletService.dbInsert(list);
-		    	list.clear();
-		    	pageSize = 1;
-		    	//session.getBasicRemote().sendText("Message received: "+(count/size)*100);
+//		    	list.clear();
+//		    	pageSize = 1;
+		    	session.getBasicRemote().sendText("Message received: "+(count/size)*100);
 		    }
 		}
 		
 		bf.close();
-		session.getBasicRemote().sendText("Message received: ");
+		//session.getBasicRemote().sendText("Message received: ");
 	}
 }
