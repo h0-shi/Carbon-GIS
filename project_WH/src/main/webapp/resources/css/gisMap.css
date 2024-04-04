@@ -31,6 +31,26 @@ body, html{
 .legend:active {
   cursor: grabbing;
 }
+ .pBar{
+  width: 170px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-size: x-small;
+  background-color: white;
+  position: absolute;
+  user-select: none;
+  left:calc(100% - 180px);
+  top:calc(100% - 190px);
+  /*  drag cursor   */
+  cursor: grab;
+}
+.pBar:active {
+  cursor: grabbing;
+}
 
 .color{
 	width: 25px;

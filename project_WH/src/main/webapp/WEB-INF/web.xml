@@ -24,6 +24,12 @@
 	<load-on-startup>1</load-on-startup>
   </servlet>
   
+   <servlet>
+        <servlet-name>WebSocketServlet</servlet-name>
+        <servlet-class>org.apache.tomcat.websocket.server.WebSocketServerContainerInitializer</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+  
   <servlet-mapping>
 	<servlet-name>action</servlet-name>
 	<url-pattern>*.do</url-pattern>

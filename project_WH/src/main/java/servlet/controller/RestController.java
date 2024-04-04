@@ -76,7 +76,7 @@ public class RestController {
 		    if(--pageSize <= 0 ) {
 		    	//int result = servletService.dbInsert(list);
 		    	list.clear();
-		    	pageSize = 0;
+		    	pageSize = 10000;
 		    }
 		}
 		

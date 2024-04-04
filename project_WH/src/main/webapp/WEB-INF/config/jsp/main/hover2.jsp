@@ -472,21 +472,18 @@
 				contentType: false,
 				data: formData,
 				type: 'POST',
-				xhr: function(){
-					var xhr = $.ajaxSettings.xhr();
-					xhr.upload.onprogress = function(event){
-						var perc = Math.round((event.loaded/evemt.total)*100);
-						$("#pBar").text(perc+'%');
-						$("#pBar").css('width',perc+'%');
-					};
-					return xhr;
+				success: function(result){
+					console.log(result);
+					alert(result);
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
 				}
 			});
 		});
 		
 		//draggable
 		$("#legend").draggable({containment:"#boxLine", scroll:false});
-		$("#pBar").draggable({containment:"#boxLine", scroll:false});
 		
    });
 </script>
@@ -563,9 +560,6 @@
 					   			</tr>
 				   			</tbody>
 				   		</table>
-				   	</div>
-			      	<div class="draggable pBar" id="pBar">
-			      		테스트
 				   	</div>
 			  	 <div>
 				</div>
