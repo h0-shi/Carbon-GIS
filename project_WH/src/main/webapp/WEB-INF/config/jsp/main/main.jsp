@@ -18,36 +18,15 @@
 	    console.log("WebSocket connection opened");
 	};
 	
-	//여기서 받는구나
-    websocket.onmessage = function(event) {
-        console.log("Received message from server:", event.data);
-    };
+	websocket.onmessage = function(event) {
+	    console.log("Received message from server:", event.data);
+	};
 	
 	function sendMessage() {
-		  const fileInput = document.getElementById("fileInput");
-          const file = fileInput.files[0];
-          
-          const reader = new FileReader();
-          reader.onload = function(event) {
-              const fileContent = event.target.result;
-              const lines = fileContent.split('\n'); // 한 줄씩 분리
-              let chunk = "";
-              
-              lines.forEach(line => {
-                  chunk += line + '\n'; // 줄을 chunk에 추가
-                  if (chunk.split('\n').length >= 10000) { // 10000줄마다 전송
-                      websocket.send(chunk); // chunk 전송
-                      chunk = ""; // chunk 초기화
-                  }
-              });
-
-              if (chunk.length > 0) { // 마지막 chunk 전송
-                  websocket.send(chunk);
-              }
-              
-              
-          };
-          reader.readAsText(file);
+	    const messageInput = document.getElementById("messageInput");
+	    const message = messageInput.value;
+	    websocket.send(message);
+	    messageInput.value = ""; // Clear input field
 	}
 
    $(document).ready(function() {
@@ -118,7 +97,7 @@ body, html{
 <body>
 <div class="">
 		<div class="">
-			<input type="file" id="fileInput">
+			<input type="text" id="messageInput" placeholder="Type a message...">
     		<button onclick="sendMessage()">Send</button>
 			
 			<hr>

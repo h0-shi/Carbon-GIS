@@ -30,6 +30,7 @@ public class RestController {
 	private ServletService servletService;
 	@Resource(name = "AnalysisService")
 	private AnalysisService analysisService;
+	
 	@Autowired
 	Util util;
 	
@@ -60,10 +61,10 @@ public class RestController {
 		InputStreamReader isr = new InputStreamReader(mFile.getInputStream(),"UTF-8");
 		BufferedReader bf = new BufferedReader(isr);
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-
+		
 		String aLine = null;
 		int count = 0;
-		int pageSize = 10000;
+		int pageSize = 1;
 		while((aLine = bf.readLine()) != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			String[] arr = aLine.split("\\|");
@@ -76,7 +77,7 @@ public class RestController {
 		    if(--pageSize <= 0 ) {
 		    	//int result = servletService.dbInsert(list);
 		    	list.clear();
-		    	pageSize = 10000;
+		    	pageSize = 1;
 		    }
 		}
 		

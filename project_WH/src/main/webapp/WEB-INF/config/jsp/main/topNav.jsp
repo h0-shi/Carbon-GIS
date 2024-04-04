@@ -27,7 +27,7 @@
 </head>
 <body>
 	<div class="head">
-        <img class="icon" alt="로고" class="logo" src="<c:url value='/resources/'/>/image/logo.png">
+        <img class="icon" alt="로고" class="logo" onclick="location.href='./main.do'" src="<c:url value='/resources/'/>/image/logo.png">
    	</div>
 </body>
 </html>
