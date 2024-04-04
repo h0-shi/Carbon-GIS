@@ -1,12 +1,14 @@
 package servlet.controller;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
@@ -56,12 +58,21 @@ public class RestController {
 	}
 	
 	@PostMapping("/dbInsert.do")
-	public int test(MultipartHttpServletRequest request) throws IOException {
+	public String dbInsert(MultipartHttpServletRequest request) throws IOException {
 		MultipartFile mFile = request.getFile("file");
+		String fileRealName = mFile.getOriginalFilename();
+		String fileExtension = fileRealName.substring(fileRealName.lastIndexOf("."),fileRealName.length());
+		String upfile = "C:\\eGovFrameDev-3.10.0-64bit\\workspace\\Carbon-GIS\\project_WH\\src\\main\\webapp\\resources\\upload\\";
+		
+		UUID uuid = UUID.randomUUID();
+		System.out.println(upfile);
+		File saveFile = new File(upfile, uuid+fileRealName);
+		mFile.transferTo(saveFile);
+		System.out.println("성공");
+		/*		
 		InputStreamReader isr = new InputStreamReader(mFile.getInputStream(),"UTF-8");
 		BufferedReader bf = new BufferedReader(isr);
 		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-		
 		String aLine = null;
 		int count = 0;
 		int pageSize = 1;
@@ -82,8 +93,8 @@ public class RestController {
 		}
 		
 		bf.close();
-		
-		return count;//return result; 
+		*/
+		return uuid+fileRealName;//return result; 
 	}
 	
 	@PostMapping("/legend.do")

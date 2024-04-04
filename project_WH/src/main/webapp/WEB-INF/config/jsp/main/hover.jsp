@@ -24,16 +24,14 @@
 	};
 	
 	websocket.onmessage = function(event) {
-	    console.log("진행률:", event.data);
+	    console.log("Received message from server:", event.data);
 	};
 	
-	function sendMessage() {
-	    const messageInput = document.getElementById("messageInput");
-	    const message = messageInput.value;
-	    websocket.send(message);
+	function dbInsert(fileName) {
+	    websocket.send(fileName);
 	    messageInput.value = ""; // Clear input field
 	}
-
+	
    $(document).ready(function() {
 	   //변수들 모음
 	   //Colored Border 지우기 위한 변수
@@ -489,21 +487,18 @@
 				contentType: false,
 				data: formData,
 				type: 'POST',
-				xhr: function(){
-					var xhr = $.ajaxSettings.xhr();
-					xhr.upload.onprogress = function(event){
-						var perc = Math.round((event.loaded/evemt.total)*100);
-						$("#pBar").text(perc+'%');
-						$("#pBar").css('width',perc+'%');
-					};
-					return xhr;
+				success: function(result){
+					console.log(result);
+					dbInsert(result);
+				},
+				error: function(request, status, error){ //통신오류
+					alert("에러 발생");
 				}
 			});
 		});
 		
 		//draggable
 		$("#legend").draggable({containment:"#boxLine", scroll:false});
-		$("#pBar").draggable({containment:"#boxLine", scroll:false});
 		
    });
 </script>
@@ -580,9 +575,6 @@
 					   			</tr>
 				   			</tbody>
 				   		</table>
-				   	</div>
-			      	<div class="draggable pBar" id="pBar">
-			      		테스트
 				   	</div>
 			  	 <div>
 				</div>
