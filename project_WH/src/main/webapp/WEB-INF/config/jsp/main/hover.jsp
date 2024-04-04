@@ -29,7 +29,6 @@
 	
 	function dbInsert(fileName) {
 	    websocket.send(fileName);
-	    messageInput.value = ""; // Clear input field
 	}
 	
    $(document).ready(function() {
