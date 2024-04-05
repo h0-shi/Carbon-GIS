@@ -32,11 +32,11 @@ public class WebSocket {
 	      BufferedReader bf = new BufferedReader(reader);
 	      File f = new File(root+fileName);
 	      long size = f.length();
-	      System.out.println(size+"이게 사이즈");
+	    //  System.out.println(size+"이게 사이즈");
 	      List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 	      String aLine = null;
 	      long count = 0;
-	      int pageSize = 10000;
+	      int pageSize = 1;
 	      session.getBasicRemote().sendText("시작합니다");
 	      while((aLine = bf.readLine()) != null) {
 	         Map<String, Object> map = new HashMap<String, Object>();
@@ -52,10 +52,20 @@ public class WebSocket {
 	             int result = servletService.dbInsert(list);
 	             list.clear();
 	             long perc = (count*100)/size;
-	             System.out.println(perc+"이게 퍼센트");
-	             session.getBasicRemote().sendText((count/size)*100+"");
-	             pageSize = 10000;
+	             //System.out.println(perc+"이게 퍼센트");
+	             session.getBasicRemote().sendText(perc+"");
+	             pageSize = 1;
 	          }
+	      }
+	      session.getBasicRemote().sendText(100+"");
+	      if(f.exists()) {
+	    	  if(f.delete()) {
+	    		  System.out.println("파일 삭제");
+	    	  }else {
+	    		  System.out.println("삭제 실패");
+	    	  }
+	      } else {
+	    	  System.out.println("파일 없음");
 	      }
 	      bf.close();
 		

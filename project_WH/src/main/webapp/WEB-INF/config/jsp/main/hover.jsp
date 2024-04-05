@@ -17,21 +17,6 @@
 <link href="<c:url value='/resources/'/>css/sidebar.css" rel="stylesheet" type="text/css" >
 <link href="<c:url value='/resources/'/>css/gisMap.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <script>
-/*
-	const websocket = new WebSocket("ws://localhost/project_WH/webSocket");
-	
-	websocket.onopen = function(event) {
-	    console.log("WebSocket connection opened");
-	};
-	
-	websocket.onmessage = function(event) {
-	    console.log("Received message from server:", event.data);
-	};
-	
-	function dbInsert(fileName) {
-	    websocket.send(fileName);
-	}
-	*/
    $(document).ready(function() {
 	   //변수들 모음
 	   //Colored Border 지우기 위한 변수
