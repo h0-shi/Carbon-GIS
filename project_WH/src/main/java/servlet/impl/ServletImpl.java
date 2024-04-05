@@ -23,6 +23,13 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	@Inject
 	private ServletDAO webDao;
 	
+	public List<Object> sidonmTest() {
+		return webDao.test();
+	}
+	public int Refresh() {
+		return webDao.refresh();
+	}
+	
 	@Override
 	public String addStringTest(String str) throws Exception {
 		List<EgovMap> mediaType = dao.selectAll();
@@ -59,8 +66,11 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 		return dao.legend(where);
 	}
 	
-	public List<Object> sidonmTest() {
-		return webDao.test();
+
+	@Override
+	public int truncate() {
+		return dao.truncate();
 	}
+
 
 }

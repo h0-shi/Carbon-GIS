@@ -8,10 +8,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>브이월드 오픈API</title>
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>  
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
 <script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
@@ -473,19 +471,19 @@
 		        <ul>
 		            <li class="selectedCate">
 		            	<a href="./hover.do">
-		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/map.png">
+		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/mapicon.png">
 		           		<br>탄소공간지도
 		           		</a>
 		           	</li>
 		            <li>
 		           		 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-		           		 <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/upload.png">
+		           		 <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/uploadicon.png">
 		           		 <br>데이터 업로드
 		           		 </a>
 		           	</li>
 		            <li>
 			            <a href="./analysis.do">
-			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/analytics.png">
+			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/graphicon.png">
 			            <br>탄소 통계
 			            </a>
 			        </li>

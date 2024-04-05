@@ -8,10 +8,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>브이월드 오픈API</title>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
 <script type="text/javascript" src="<c:url value='resources/js/ol.js' />"></script>
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <link href="<c:url value='/resources/'/>css/sidebar.css" rel="stylesheet" type="text/css" >
@@ -456,34 +458,8 @@
 			
 		});
 		
-	
-		$("#fileBtn").click(function(event){
-			event.preventDefault();
-			var form = $("#file");
-			console.log(form[0]); 
-			
-			var formData = new FormData(form[0]);
-			//console.log(formData); 
-			
-			$.ajax({
-				url: './dbInsert.do',
-				enctype: 'multipart/form-data',
-				processData: false,
-				contentType: false,
-				data: formData,
-				type: 'POST',
-				success: function(result){
-					console.log(result);
-					alert(result);
-				},
-				error: function(request, status, error){ //통신오류
-					alert("에러 발생");
-				}
-			});
-		});
-		
 		//draggable
-		$("#legend").draggable({containment:"#boxLine", scroll:false});
+		$("#legend").draggable({ containment: "#boxLine", scroll: false });
 		
    });
 </script>
@@ -563,27 +539,8 @@
 				   	</div>
 			  	 <div>
 				</div>
+				<%@ include file="upload.jsp" %>
 		</div>
-		<!-- Modal -->
-			<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-			  <div class="modal-dialog">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h1 class="modal-title fs-5" id="staticBackdropLabel">데이터 업로드</h1>
-			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			      </div>
-			      <div class="modal-body">
-					<form id="file" enctype="multipart/form-data">
-			      		<input type="file" name="file">
-			      		<button type="button" id="fileBtn">업로드</button>
-			      	</form>
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
 		   
 		   <div>
 		   

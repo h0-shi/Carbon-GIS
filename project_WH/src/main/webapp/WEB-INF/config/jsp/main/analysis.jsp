@@ -30,11 +30,10 @@
 	 			['${sd.usage_nm}',${sd.usage}, "skyblue"],
 	 		</c:forEach>
 	      ]);
-		options = {'title':'How Much Pizza I Ate Last Night',
-                'width': 700,
-                'height':300};
-		chart = new google.visualization.BarChart(document.getElementById('chart'));
+		options = {'title':'국가 전기 사용량'};
+		chart = new google.visualization.BarChart(document.getElementById('chart_div'));
 		chart.draw(data, options);
+		window.addEventListener('resize',drawChart,false);
 	}
 	function addData(usage_nm, usage){
 		data.addRow([usage_nm, usage, "skyblue"]);
@@ -146,30 +145,46 @@ $(document).ready(function(){
 });
 </script>
 <style type="text/css">
+.mainContent{
+	height: calc(100vh - 70px);
+	margin: 10px;
+	padding: 10px;
+	border: 1px solid grey;
+	border-radius: 5px;
+}
 .chart{
 	width: 100%;
-	height: 400px;
-	border-color: 1px soild black;
+	height: 100%;
+	border-color: 10px soild black;
+}
+.graphDiv{
+	padding: 10px;
+	margin-right: 5px;
+	width: calc(50% - 5px);
+	height: 80%;
+	float: left;
+	border: 1px solid grey;
+	border-radius: 5px;
 }
 .usageTable{
-	width: 70%;
-	border-color: 1px soild black;
+	width: 100%;
+	height: 100%;
 }
 .total{
 	height: auto;
+	margin-bottom: 10px;
 }
-.graph{
-	height: calc(40% - 6px);
-}
-.table{
-	width: 100%;
-	height: 40%;
-	margin: 0;
+.table_div{
+	width: calc(50% - 5px);
+	height: 80%;
+	margin-left: 5px;
 	display: block;
 	justify-content: center;
 	text-align: center;
 	overflow-y: auto;
-	border: 3px solid black;
+	border: 1px solid grey;
+	border-radius: 5px;
+	float: left;
 }
 .aContainer{
 	display: flex;
@@ -178,9 +193,6 @@ $(document).ready(function(){
 }
 .content{
 	flex: 1 1 auto;
-}
-.table table{
-	height: auto;
 }
 </style>
 </head>
@@ -192,19 +204,19 @@ $(document).ready(function(){
 		        <ul>
 		            <li>
 		            	<a href="./hover.do">
-		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/map.png">
+		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/mapicon.png">
 		           		<br>탄소공간지도
 		           		</a>
 		           	</li>
 		            <li>
 		           		 <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-		           		 <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/upload.png">
+		           		 <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/uploadicon.png">
 		           		 <br>데이터 업로드
 		           		 </a>
 		           	</li>
 		            <li class="selectedCate">
 			            <a href="./analysis.do">
-			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/analytics.png">
+			            <img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/graphicon.png">
 			            <br>탄소 통계
 			            </a>
 			        </li>
@@ -228,31 +240,33 @@ $(document).ready(function(){
 	    </div>
 		
 		<div class="content">
-			<div class="total">
-				<h1>탄소 배출(전기) 현황</h1>
-				<hr>
-				배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/>
-			</div>
-			<div class="graph">
-				<div id="chart" class="chart"></div>
-			</div>
-			<div class="table">
-				<table border="1" id="usageTable" class="usageTable">
-					<thead>
-						<tr>
-							<th>시도별</th>
-							<th>사용량</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach items="${sdTotal }" var="sd">
+			<div class="mainContent">
+				<div class="total">
+					<h2>탄소 배출(전기) 현황</h2>
+					<hr>
+					<h5>총 배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/></h5>
+				</div>
+				<div class="graphDiv">
+					<div id="chart_div" class="chart"></div>
+				</div>
+				<div class="table_div">
+					<table id="usageTable" class="usageTable">
+						<thead>
 							<tr>
-								<td>${sd.usage_nm }</td>
-								<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
+								<th>시도별</th>
+								<th>사용량</th>
 							</tr>
-		 				</c:forEach>
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							<c:forEach items="${sdTotal }" var="sd">
+								<tr>
+									<td>${sd.usage_nm }</td>
+									<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
+								</tr>
+			 				</c:forEach>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 		<%@ include file="upload.jsp" %>

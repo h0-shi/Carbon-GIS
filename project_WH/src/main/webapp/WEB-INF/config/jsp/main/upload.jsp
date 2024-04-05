@@ -6,6 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <script type="text/javascript">
 $(document).ready(function(){
@@ -16,11 +17,31 @@ $(document).ready(function(){
 		event.preventDefault();
 		var form = $("#file");
 		console.log(form[0]); 
-		
+		var fileName = $(".fileIn").val().split('\\').pop().toLowerCase();
+		var ext =  fileName.split('.').pop().toLowerCase();
+		if(ext != 'txt'){
+			alert("txt 파일만 첨부 가능합니다.");
+			return false;
+		}
 		var formData = new FormData(form[0]);
-		//console.log(formData); 
+		
+		
 		$("#file").hide();
 		$(".spinner").show();
+		
+		var i = 0;
+		setInterval(function(){
+			if(i==0){
+				$(".fileLoad").text("로딩중 . ");
+				i++;
+			} else if(i==1){
+				$(".fileLoad").text("로딩중 . .");
+				i++;
+			}else {
+				$(".fileLoad").text("로딩중 . . .");
+				i=0;
+			}
+		}, 1000);
 		
 		$.ajax({
 			url: './dbInsert.do',
@@ -31,9 +52,13 @@ $(document).ready(function(){
 			type: 'POST',
 			success: function(result){
 				$(".spinner").hide();
-				$(".progressDiv").show();
+				if(result.length < 1){
+					alert("파일을 확인해주세요.");
+					$("#file").show();
+					return false;
+				}
 				
-				var i = 0;
+				$(".progressDiv").show();
 				setInterval(function(){
 					if(i==0){
 						$(".nowLoading").text("진행중 .");
@@ -62,7 +87,7 @@ $(document).ready(function(){
 				};
 			},
 			error: function(request, status, error){ //통신오류
-				alert("에러 발생");
+				alert("업로드 실패. 파일을 확인해주세요.");
 				$("#file").show();
 			}
 		});
@@ -100,10 +125,10 @@ $(document).ready(function(){
 				  <span class="visually-hidden">Loading...</span>
 				</div>
 				<br>
-				<span>로딩중 . . .</span>
+				<span class="fileLoad">로딩중 .</span>
 			</div>
 			<form id="file" enctype="multipart/form-data">
-	      		<input type="file" name="file">
+	      		<input type="file" name="file" accept=".txt" class="fileIn">
 	      		<button type="button" id="fileBtn">업로드</button>
 	      	</form>
 	      </div>

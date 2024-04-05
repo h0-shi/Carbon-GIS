@@ -43,7 +43,7 @@
 	</select>
 	
 	<insert id="dbInsert" parameterType="map">
-		INSERT INTO "c1_test" ("useDate","sggCD",bjd,usage) VALUES 
+		INSERT INTO "TB_CARBON_C1" ("useDate","sggCD",bjd,usage) VALUES 
 		<foreach collection="list" item="item" separator=",">
 			(#{item.useDate}, #{item.sggCD},#{item.bjd},#{item.usage})
 		</foreach>
@@ -71,6 +71,19 @@
 				) AS subquery_alias), 5
 			) as test
 	</select>
+	
+	<delete id="trunc">
+		truncate table "TB_CARBON_C1"
+	</delete>
 		
+	<update id="refreshSd">
+		REFRESH MATERIALIZED VIEW c1_sd
+	</update>
+	<update id="refreshSgg">
+		REFRESH MATERIALIZED VIEW c1_sgg
+	</update>
+	<update id="refreshBjd">
+		REFRESH MATERIALIZED VIEW c1_bjd
+	</update>
 	
 </mapper>

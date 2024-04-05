@@ -1,7 +1,9 @@
 package servlet.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,38 +61,30 @@ public class RestController {
 		MultipartFile mFile = request.getFile("file");
 		String fileRealName = mFile.getOriginalFilename();
 		String fileExtension = fileRealName.substring(fileRealName.lastIndexOf("."),fileRealName.length());
-		String upfile = "C:\\eGovFrameDev-3.10.0-64bit\\workspace\\Carbon-GIS\\project_WH\\src\\main\\webapp\\resources\\upload\\";
-		
-		UUID uuid = UUID.randomUUID();
-		System.out.println(upfile);
-		File saveFile = new File(upfile, uuid+fileRealName);
-		mFile.transferTo(saveFile);
-		System.out.println("성공");
-		/*		
+		if(!fileExtension.equals(".txt")) {
+			System.out.println(fileExtension);
+			return "";
+		}
 		InputStreamReader isr = new InputStreamReader(mFile.getInputStream(),"UTF-8");
 		BufferedReader bf = new BufferedReader(isr);
-		List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
-		String aLine = null;
-		int count = 0;
-		int pageSize = 1;
-		while((aLine = bf.readLine()) != null) {
+		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			String[] arr = aLine.split("\\|");
-		    map.put("useDate", arr[0]);
-		    map.put("sggCD", arr[3]);
-		    map.put("bjd", arr[4]);
-		    map.put("usage", Integer.parseInt(arr[13]));
-		    list.add(map);
-		    count++;
-		    if(--pageSize <= 0 ) {
-		    	//int result = servletService.dbInsert(list);
-		    	list.clear();
-		    	pageSize = 1;
-		    }
+			String[] arr = bf.readLine().split("\\|");
+			map.put("useDate", arr[0]);
+			map.put("sggCD", arr[3]);
+			map.put("bjd", arr[4]);
+			map.put("usage", Integer.parseInt(arr[13]));
+		} catch (Exception e) {
+			return "";
 		}
 		
-		bf.close();
-		*/
+		int trunc = servletService.truncate();
+		
+		String upfile = "C:\\eGovFrameDev-3.10.0-64bit\\workspace\\Carbon-GIS\\project_WH\\src\\main\\webapp\\resources\\upload\\";
+		UUID uuid = UUID.randomUUID();
+		File saveFile = new File(upfile, uuid+fileRealName);
+		mFile.transferTo(saveFile);
+		
 		return uuid+fileRealName;//return result; 
 	}
 	
@@ -98,7 +92,6 @@ public class RestController {
 	public List<Long> legend(String filter, String type){
 		Map<String, String> where = new HashMap<String, String>();
 		where.put("filter", filter);
-		System.out.println(filter);
 		where.put("type", type);
 		String legendStr = servletService.legend(where);
 		List<Long> legend = util.getLegend(legendStr);

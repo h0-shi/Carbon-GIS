@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,15 +33,17 @@ public class WebSocket {
 	      BufferedReader bf = new BufferedReader(reader);
 	      File f = new File(root+fileName);
 	      long size = f.length();
+	      System.out.println(size);
 	    //  System.out.println(size+"이게 사이즈");
 	      List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 	      String aLine = null;
 	      long count = 0;
-	      int pageSize = 1;
-	      session.getBasicRemote().sendText("시작합니다");
+	      int pageSize = 15000;
+	      //session.getBasicRemote().sendText("시작합니다");
+	      
 	      while((aLine = bf.readLine()) != null) {
 	         Map<String, Object> map = new HashMap<String, Object>();
-	         count += aLine.getBytes().length;
+	         count += aLine.getBytes("ks_c_5601-1987").length+2;
 	         //System.out.println(count+"이게 카운트");
 	         String[] arr = aLine.split("\\|");
 	          map.put("useDate", arr[0]);
@@ -49,14 +52,19 @@ public class WebSocket {
 	          map.put("usage", Integer.parseInt(arr[13]));
 	          list.add(map);
 	          if(--pageSize <= 0 ) {
+	        	 //System.out.println("초기화");
 	             int result = servletService.dbInsert(list);
 	             list.clear();
 	             long perc = (count*100)/size;
 	             //System.out.println(perc+"이게 퍼센트");
 	             session.getBasicRemote().sendText(perc+"");
-	             pageSize = 1;
+	             //System.out.println(count+"/"+size);
+	             //System.out.println(perc);
+	             pageSize = 15000;
 	          }
 	      }
+	     int refresh =  servletService.Refresh();
+	     System.out.println(refresh);
 	      session.getBasicRemote().sendText(100+"");
 	      if(f.exists()) {
 	    	  if(f.delete()) {
@@ -67,6 +75,7 @@ public class WebSocket {
 	      } else {
 	    	  System.out.println("파일 없음");
 	      }
+	      
 	      bf.close();
 		
 	}

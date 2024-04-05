@@ -54,4 +54,15 @@ public class ServletDAO extends EgovComAbstractDAO {
 		return webSession.selectList("servlet.sidonm");
 	}
 
+	public int truncate() {
+		return session.delete("servlet.trunc");
+	}
+
+	public int refresh() {
+		int result = webSession.update("servlet.refreshSd");
+		result += webSession.update("servlet.refreshSgg");
+		result += webSession.update("servlet.refreshBjd");
+		return result;
+	}
+
 }

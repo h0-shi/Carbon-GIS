@@ -6,7 +6,7 @@ body, html{
 	padding: 0;
 }
 .sidebar{
-    width: 270px;
+    width: 350px;
     height: calc(100vh - 50px);
     left: 0;
     top: 0;
@@ -15,14 +15,13 @@ body, html{
     flex: 0 0 auto;
 }
 .sideCategory{
-	width: 33%;
+	width: 90px;
 	height: 100%;
 	float: left;
-	border: 1px solid grey;
-	background-color: white;
+	background-color: #333333;
 }
 .sideDetail{
-	width: 67%;
+	width: 260px;
 	height: 100%;
 	float: left;
 	background-color: white;
@@ -31,8 +30,10 @@ body, html{
 }
 .sideDetail > form > select{
 	width: 80%;
-	height: 30px;
+	height: 35px;
 	margin: 0 auto;
+	border-radius: 5px;
+	border-color: grey;
 	margin-top: 10px;
 	display: block;
 }
@@ -43,8 +44,13 @@ body, html{
 	margin: 0 auto;
 	margin-top: 10px;
 	display: block;
-	background-color: blue;
+	background-color: #2992D8;
+	border-radius: 5px;
+	border-color: grey;
 	color: white;
+}
+.sideDetail > form > button:hover{
+	background-color: #2279B3;
 }
 
 .sideCategory > ul > li {
@@ -61,7 +67,9 @@ body, html{
 	filter: drop-shadow(5px 3px 3px grey); 
 }
 .selectedCate{
-	filter: drop-shadow(5px 3px 3px grey);
+	width: 100%;
+	background-color: #2992D8;
+	flex: 1;
 }
 .sideCategory ul {
     font-weight: bold;
@@ -76,7 +84,7 @@ body, html{
     text-align:center;
     font-size: small;
     text-decoration: none;
-    color: black;
+    color: white;
 }
 .icon{
 	width: 50px;
