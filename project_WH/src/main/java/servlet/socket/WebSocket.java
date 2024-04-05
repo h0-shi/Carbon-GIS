@@ -36,12 +36,12 @@ public class WebSocket {
 	      List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 	      String aLine = null;
 	      long count = 0;
-	      int pageSize = 1;
+	      int pageSize = 10000;
 	      session.getBasicRemote().sendText("시작합니다");
 	      while((aLine = bf.readLine()) != null) {
 	         Map<String, Object> map = new HashMap<String, Object>();
 	         count += aLine.getBytes().length;
-	         System.out.println(count+"이게 카운트");
+	         //System.out.println(count+"이게 카운트");
 	         String[] arr = aLine.split("\\|");
 	          map.put("useDate", arr[0]);
 	          map.put("sggCD", arr[3]);
@@ -51,10 +51,10 @@ public class WebSocket {
 	          if(--pageSize <= 0 ) {
 	             int result = servletService.dbInsert(list);
 	             list.clear();
-	             pageSize = 1;
 	             long perc = (count*100)/size;
 	             System.out.println(perc+"이게 퍼센트");
-	             session.getBasicRemote().sendText((count/size)*100+"%완료");
+	             session.getBasicRemote().sendText((count/size)*100+"");
+	             pageSize = 10000;
 	          }
 	      }
 	      bf.close();

@@ -255,6 +255,7 @@ $(document).ready(function(){
 				</table>
 			</div>
 		</div>
+		<%@ include file="upload.jsp" %>
 	</div>
 </body>
 </html>
