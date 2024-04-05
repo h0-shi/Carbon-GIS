@@ -43,7 +43,7 @@ public class WebSocket {
 	      
 	      while((aLine = bf.readLine()) != null) {
 	         Map<String, Object> map = new HashMap<String, Object>();
-	         count += aLine.getBytes("ks_c_5601-1987").length+2;
+	         count += aLine.getBytes("ks_c_5601-1987").length+8;
 	         //System.out.println(count+"이게 카운트");
 	         String[] arr = aLine.split("\\|");
 	          map.put("useDate", arr[0]);
