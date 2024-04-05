@@ -7,139 +7,106 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Diphylleia&family=Gowun+Dodum&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <title>브이월드 오픈API</title>
-
 <link href="<c:url value='/resources/'/>css/ol.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
-<script>
-	const websocket = new WebSocket("ws://localhost/project_WH/webSocket");
-	
-	websocket.onopen = function(event) {
-	    console.log("WebSocket connection opened");
-	};
-	
-	websocket.onmessage = function(event) {
-	    console.log("Received message from server:", event.data);
-	};
-	
-	function sendMessage() {
-	    const messageInput = document.getElementById("messageInput");
-	    const message = messageInput.value;
-	    websocket.send(message);
-	    messageInput.value = ""; // Clear input field
-	}
+<script type="text/javascript">
+$(document).ready(function(){
+	console.log("시작");
+	$('.bg-inner').on("mousemove", function(e) {
+		  const width = $(window).width();
+		  const height = $(window).height();
 
-   $(document).ready(function() {
-	   
-   });
-   
+		  const moveX = (e.pageX - width / 2) / width;
+		  const moveY = (e.pageY - height / 2) / height;
+
+		  const backMoveX = -moveX * 30;
+		  const backMoveY = -moveY * 10;
+		  $('.temp-bg-back').css({
+		    'transform': 'translate('+backMoveX+'px, '+backMoveY+'px)'
+		  });
+		});
+});
 </script>
-
 <style>
-body, html{
-	height: 100%;
-	width: 100%;
-	margin: 0;
-}
-    .map {
-      height: 100%;
-      width: 100% ;
-    }
-    
-    .olControlAttribution {
-        right: 20px;
-    }
 
-    .olControlLayerSwitcher {
-        right: 20px;
-        top: 20px;
-    }
- .legend{
-  width: auto;
-  height: 125px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  border-radius: 2px;
-  font-size: x-small;
-  background-color: white;
-  position: absolute;
-  left: 50px;
-  top: 50px;
-  
-  user-select: none;
-  
-  /*  drag cursor   */
-  cursor: grab;
+* { 
+	margin: 0; 
+	padding: 0;
+	font-family: "Noto Serif KR", serif;
+  	font-weight: 750;
+  	font-style: normal; 
 }
-
-.legend:active {
-  cursor: grabbing;
+.bg-inner {
+	 width: 100%; 
+	 height: 100vh; 
+	 overflow: hidden;
+	 position: relative;
 }
-
-.color{
-	width: 25px;
-	height: 20px;
-	background-color: red;
+.wrap { 
+	transform: scale(1.2);
 }
-.boxLine{
+.temp-bg-back { 
+	transition: .1s ease-out; 
+	filter: brightness(60%);
+}
+.backBg { 
+	width: 100%; 
+}
+.content{
+	color: white;
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	z-index: 5;
+	text-align: center;
+}
+.logo > img{
 	width: 100%;
-	height: 70%;
+	height: auto;
+   	display: block;
+	margin: 0 auto; /* 가로 중앙 정렬 */
+	filter: drop-shadow(1px 1px white);
 }
-.container{
-	height: 100%;
-	width: 100%;
-	display: flex;
+.content > button{
+	width: 50%;
+	height: 60px;
+	margin-top: 15px;
+	background-color: rgba(255,255,255,0.04);
+	color: white;
+	border-color: white;
+	border-width: 1px;
+	font-size: x-large;
+}
+.content > button:hover{
+	background-color: rgba(255,255,255,0.2);
+}
+.title{
+	margin-top: 15px;
+}
+.logo{
+	max-width: 100%;	
+	height: auto;
 }
 </style>
 </head>
-<body>
-<div class="">
-		<div class="">
-			<input type="text" id="messageInput" placeholder="Type a message...">
-    		<button onclick="sendMessage()">Send</button>
-			
-			<hr>
-			<div class="total">
-				배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/>
-			</div>
-			<div class="graph">
-				<div id="chart" class="chart"></div>
-			</div>
-			<div class="table">
-				<div>
-					<table border="1" id="usageTable" class="usageTable">
-						<thead>
-							<tr>
-								<th>시도별</th>
-								<th>사용량</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${sdTotal }" var="sd">
-								<tr>
-									<td>${sd.usage_nm }</td>
-									<td><fmt:formatNumber value="${sd.usage }" pattern="#,###"/></td>
-								</tr>
-			 				</c:forEach>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<form id="dropdowns">
-				<select id="sd">
-					<option value=0>전체 선택</option>
-					<c:forEach items="${sdnm }" var="sd">
-						<option value="${sd.sd_nm }">${sd.sd_nm }</option>
-					</c:forEach>
-				</select>
-				<select id="sgg">
-					<option value=0>전체 선택</option>
-				</select>
-				<button type="submit">선택</button>
-			</form>
-		</div>
+    <div class="content">
+	    <div class="logo" >
+	    	<img alt="logo" src="<c:url value='/resources/'/>/image/logo.png">
+	    </div>
+    	<h1 class="title">C조 탄소 지도 프로젝트</h1>
+    	<button onclick="location.href='./hover.do'">시작하기</button>
+    </div>
+	<div class="bg-inner">
+	  <div class="wrap">
+	    <div class="temp-bg-back">
+	      <img src="<c:url value='/resources/'/>image/background.jpg" class="backBg">
+	    </div>
+	  </div>
 	</div>
 </body>
 </html>
