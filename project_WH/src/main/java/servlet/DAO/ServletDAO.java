@@ -3,6 +3,8 @@ package servlet.DAO;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,20 +19,24 @@ public class ServletDAO extends EgovComAbstractDAO {
 	@Autowired
 	private SqlSessionTemplate session;
 	
+	@Inject
+	private SqlSessionTemplate webSession;
+	
 	public List<EgovMap> selectAll() {
-		return selectList("servlet.serVletTest");
+		return session.selectList("servlet.serVletTest");
 	}
 
 	public List<ServletVO> sidonm() {
-		return selectList("servlet.sidonm");
+		System.out.println(session);
+		return session.selectList("servlet.sidonm");
 	}
 
 	public List<ServletVO> sgg(String sd) {
-		return selectList("servlet.sgg", sd);
+		return session.selectList("servlet.sgg", sd);
 	}
 
 	public List<ServletVO> bjd(String sgg) {
-		return selectList("servlet.bjd",sgg);
+		return session.selectList("servlet.bjd",sgg);
 	}
 
 	public Map<String, String> center(Map<String, String> where) {
@@ -43,6 +49,10 @@ public class ServletDAO extends EgovComAbstractDAO {
 
 	public String legend(Map<String, String> where) {
 		return session.selectOne("servlet.legend",where);
+	}
+
+	public List<Object> test() {
+		return webSession.selectList("servlet.sidonm");
 	}
 
 }

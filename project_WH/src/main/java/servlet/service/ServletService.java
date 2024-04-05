@@ -20,4 +20,6 @@ public interface ServletService {
 
 	String legend(Map<String, String> where);
 
+	List<Object> sidonmTest();
+
 }

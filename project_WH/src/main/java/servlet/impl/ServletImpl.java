@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -19,6 +19,9 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	
 	@Resource(name="ServletDAO")
 	private ServletDAO dao;
+	
+	@Inject
+	private ServletDAO webDao;
 	
 	@Override
 	public String addStringTest(String str) throws Exception {
@@ -56,8 +59,8 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 		return dao.legend(where);
 	}
 	
-	public List<ServletVO> sidonmTest() {
-		return dao.sidonm();
+	public List<Object> sidonmTest() {
+		return webDao.test();
 	}
 
 }
