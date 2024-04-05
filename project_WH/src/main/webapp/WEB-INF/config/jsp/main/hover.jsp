@@ -17,6 +17,7 @@
 <link href="<c:url value='/resources/'/>css/sidebar.css" rel="stylesheet" type="text/css" >
 <link href="<c:url value='/resources/'/>css/gisMap.css" rel="stylesheet" type="text/css" > <!-- OpenLayer css -->
 <script>
+/*
 	const websocket = new WebSocket("ws://localhost/project_WH/webSocket");
 	
 	websocket.onopen = function(event) {
@@ -30,7 +31,7 @@
 	function dbInsert(fileName) {
 	    websocket.send(fileName);
 	}
-	
+	*/
    $(document).ready(function() {
 	   //변수들 모음
 	   //Colored Border 지우기 위한 변수
@@ -487,8 +488,14 @@
 				data: formData,
 				type: 'POST',
 				success: function(result){
-					console.log(result);
-					dbInsert(result);
+					const websocket = new WebSocket("ws://localhost/project_WH/webSocket");
+					websocket.onopen = function(){
+						websocket.send(result);
+					}
+					websocket.onmessage = function(event) {
+					    console.log("Received message from server:", event.data);
+					};
+					//dbInsert(result);
 				},
 				error: function(request, status, error){ //통신오류
 					alert("에러 발생");

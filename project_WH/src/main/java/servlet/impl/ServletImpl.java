@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -53,6 +54,10 @@ public class ServletImpl extends EgovAbstractServiceImpl implements ServletServi
 	@Override
 	public String legend(Map<String, String> where) {
 		return dao.legend(where);
+	}
+	
+	public List<ServletVO> sidonmTest() {
+		return dao.sidonm();
 	}
 
 }

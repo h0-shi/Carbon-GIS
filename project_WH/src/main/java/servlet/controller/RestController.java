@@ -104,5 +104,5 @@ public class RestController {
 		List<Long> legend = util.getLegend(legendStr);
 		return legend;
 	}
-
+	
 }

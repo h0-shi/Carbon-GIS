@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,9 +12,13 @@ import javax.websocket.OnMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import org.springframework.scheduling.annotation.EnableAsync;
+
 import servlet.impl.ServletImpl;
+import servlet.vo.ServletVO;
 
 @ServerEndpoint("/webSocket")
+@EnableAsync
 public class WebSocket {
 
 	@OnMessage
@@ -31,6 +34,9 @@ public class WebSocket {
 		String aLine = null;
 		long count = 0;
 		int pageSize = 1;
+		session.getBasicRemote().sendText("시작합니다");
+		List<ServletVO> sdnm = servletService.sidonmTest();
+		/*
 		while((aLine = bf.readLine()) != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			count += aLine.getBytes().length;
@@ -41,14 +47,14 @@ public class WebSocket {
 		    map.put("usage", Integer.parseInt(arr[13]));
 		    list.add(map);
 		    if(--pageSize <= 0 ) {
-		    	int result = servletService.dbInsert(list);
+		    	//int result = servletService.dbInsert(list);
+//		    	int result = servletService.dbInsert(list);
 //		    	list.clear();
 //		    	pageSize = 1;
 		    	session.getBasicRemote().sendText("Message received: "+(count/size)*100);
 		    }
 		}
-		
 		bf.close();
-		//session.getBasicRemote().sendText("Message received: ");
+		 */
 	}
 }
