@@ -24,7 +24,7 @@ body, html{
   position: absolute;
   user-select: none;
   left:calc(100% - 180px);
-  top:calc(100% - 190px);
+  top:60px;
   /*  drag cursor   */
   cursor: grab;
 }
