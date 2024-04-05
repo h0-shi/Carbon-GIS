@@ -27,7 +27,6 @@ public class ServletDAO extends EgovComAbstractDAO {
 	}
 
 	public List<ServletVO> sidonm() {
-		System.out.println(session);
 		return session.selectList("servlet.sidonm");
 	}
 
