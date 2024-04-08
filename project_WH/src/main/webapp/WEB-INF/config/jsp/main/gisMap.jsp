@@ -399,7 +399,6 @@
 				} else {
 					layer = 'Project:sgg_eq';
 				}	
-				console.log(layer);
 				bBox = '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997';
 				params = 'sgg_cd:'+sdCD;
 				filter ="";
@@ -496,7 +495,7 @@
 			<div class="sideCategory">
 		        <ul>
 		            <li class="selectedCate">
-		            	<a href="./hover.do">
+		            	<a href="./gisMap.do">
 		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/mapicon.png">
 		           		<br>탄소공간지도
 		           		</a>
