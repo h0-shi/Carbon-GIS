@@ -75,7 +75,7 @@ $(document).ready(function(){
 .content > button{
 	width: 50%;
 	height: 60px;
-	margin-top: 15px;
+	margin-top: 30px;
 	background-color: rgba(255,255,255,0.04);
 	color: white;
 	border-color: white;
@@ -99,6 +99,8 @@ $(document).ready(function(){
 	    	<img alt="logo" src="<c:url value='/resources/'/>/image/logo.png">
 	    </div>
     	<h1 class="title">C조 탄소 지도 프로젝트</h1>
+    	<span>- 백건하, 박시호, 이문희, 이진선, 신동일 -</span>
+    	<br>
     	<button onclick="location.href='./hover.do'">시작하기</button>
     </div>
 	<div class="bg-inner">
