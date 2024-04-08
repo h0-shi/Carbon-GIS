@@ -7,15 +7,16 @@
 	</select>
 	
 	<select id="sdTotal" resultType="servletVo">
-		select sd_nm as usage_nm, usage from c1_sd
+		select sd_nm as usage_nm, usage from c1_sd order by sd_nm
 	</select>
 	
 	<select id="sggTotal" resultType="servletVo">
 		SELECT substring(sgg_nm,POSITION(' ' in sgg_nm)) as usage_nm, usage from c1_sgg
-		WHERE sd_nm = #{filter}
+		WHERE sd_nm = #{filter} ORDER BY sgg_nm 
 	</select>
 	
 	<select id="bjdTotal" resultType="servletVo">
 		SELECT bjd_nm as usage_nm, usage from c1_bjd where sgg_cd = #{filter}
+		ORDER BY bjd_nm
 	</select>
 </mapper>
