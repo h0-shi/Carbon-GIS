@@ -18,7 +18,7 @@ public class Util {
 		
 		List<Long> legend = new ArrayList<Long>();
 		for (int i = 0; i < temp.length; i++) {
-			legend.add(Long.parseLong(temp[i]));			
+			legend.add(Long.parseLong(temp[i].trim()));			
 		}
 		return legend; 
 	}

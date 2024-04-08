@@ -18,10 +18,12 @@ public interface ServletService {
 
 	int dbInsert(List<Map<String, Object>> list);
 
-	String legend(Map<String, String> where);
+	String naLegend(Map<String, String> where);
 
 	List<Object> sidonmTest();
 
 	int truncate();
+
+	String eqLegend(Map<String, String> where);
 
 }

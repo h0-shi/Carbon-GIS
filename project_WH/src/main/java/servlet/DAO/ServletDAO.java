@@ -46,8 +46,8 @@ public class ServletDAO extends EgovComAbstractDAO {
 		return session.insert("servlet.dbInsert",list);
 	}
 
-	public String legend(Map<String, String> where) {
-		return session.selectOne("servlet.legend",where);
+	public String naLegend(Map<String, String> where) {
+		return session.selectOne("servlet.naLegend",where);
 	}
 
 	public List<Object> test() {
@@ -63,6 +63,10 @@ public class ServletDAO extends EgovComAbstractDAO {
 		result += webSession.update("servlet.refreshSgg");
 		result += webSession.update("servlet.refreshBjd");
 		return result;
+	}
+
+	public String eqLegend(Map<String, String> where) {
+		return session.selectOne("servlet.eqLegend",where);
 	}
 
 }

@@ -50,35 +50,20 @@
 		      zoom: 7
 		    })
 	   });
-	   
+	   /*
 		var wms = new ol.layer.Tile({
 			source : new ol.source.TileWMS({
 				url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 				
 				params : {
-		               'VERSION' : '1.1.0', // 2. 버전
-		               <c:if test="${size eq 'sd'}">
-		                'LAYERS' : 'Project:c1_sd', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997',
-		               </c:if>
-		               
-		               <c:if test="${size eq 'sgg'}">
-		               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.3871489329746835E7,3910407.083927817,1.46800091844669E7,4666488.829376992',
-		               </c:if>
-		               
-		               <c:if test="${size eq 'bjd'}">
-		               'LAYERS' : 'Project:c1_bjd', // 3. 작업공간:레이어 명
-		               'BBOX' : '1.3873946E7,3906626.5,1.4428045E7,4670269.5', 
-		               'STYLES' : 'line',
-		               </c:if>
+
 		               'SRS' : 'EPSG:3857', // SRID
 		               'FORMAT' : "image/png" // 포맷
 		            },
 		            serverType : 'geoserver',
 		         })
 		});
-		
+		*/
 	//	map.addLayer(wms); // 맵 객체에 레이어를 추가함
 		
 	// 지도 클릭시 정보 가져옴
@@ -150,9 +135,9 @@
 			sggDd.empty();
 			bjdDd.empty();
 			var all = $("<option value='1'>전체보기</option>");
-			sggDd.append(all);
 			bjdDd.append(all);
 			var disabled = $("<option value='0' disabled selected >시/군/구 선택</option>");
+			sggDd.append(all);
 			sggDd.append(disabled);
 			disabled = $("<option value='0' disabled selected >법정동 선택</option>");
 			bjdDd.append(disabled);
@@ -302,6 +287,10 @@
 		$("#bjd").on('change', function(){
 			bjd = $('#bjd option:selected').text();
 			bjdCD = $("#bjd option:selected").val();
+			sggCD = $("#sgg option:selected").val();
+			if(sggCD == 1){
+				return false;
+			}
 			
 			var cql;
 			var layer;
@@ -383,19 +372,34 @@
 			var filter;
 			var layer;
 			var type;
+			var legendType =  $("input[name='legendType']:checked").val();
 			
 			if(bjdCD != 1){
-				layer = 'Project:bjd_view';
+				if(legendType == 'na'){
+					layer = 'Project:bjd_view';
+				} else {
+					layer = 'Project:bjd_eq';
+				}
 				bBox = '1.387148932991382E7,3910407.083927817,1.46800091844669E7%,666488.829376992';
 				params = 'sgg_cd:'+sggCD;
 				filter ="bjd_nm='"+bjd+"'";
 			} else if (sggCD != 1) {
-				layer = 'Project:bjd_view';
+				if(legendType == 'na'){
+					layer = 'Project:bjd_view';
+				} else {
+					layer = 'Project:bjd_eq';
+				}				
+				console.log(layer);
 				bBox = '1.387148932991382E7,3910407.083927817,1.46800091844669E7%,666488.829376992';
 				params = 'sgg_cd:'+sggCD;
 				filter ="";
 			} else if (sdCD != 1){
-				layer = 'Project:sgg_view';
+				if(legendType == 'na'){
+					layer = 'Project:sgg_view';
+				} else {
+					layer = 'Project:sgg_eq';
+				}	
+				console.log(layer);
 				bBox = '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997';
 				params = 'sgg_cd:'+sdCD;
 				filter ="";
@@ -427,16 +431,23 @@
 				type = "bjd";
 				filter = sggCD;
 			}
+			var url;
+			if(legendType=='na'){
+				url = "./naLegend.do";
+			} else {
+				url = "./eqLegend.do";
+			}
 			$.ajax({
-				url: "./legend.do",
+				url: url,
 				type: "post",
 				data: {'filter' : filter , 'type':type},
 				dataType : 'json',
 				success: function(result){
-					console.log(result);
+					//console.log(result);
 					var table = $("#legendTable tbody");
 					$('#legendTable tbody tr td').remove();
 					$('#legendTable tbody tr').remove();
+					
 					for (var i = 0; i < result.length; i++) {
 					var td = '<tr>'+
 							"<td class='color fill"+[i]+"'></td>";
@@ -448,6 +459,7 @@
 							
 					table.append(td);
 					}
+					
 				},
 				error: function(request, status, error){ //통신오류
 					console.log("범례 오류 발생");
@@ -459,6 +471,20 @@
 		//draggable
 		$("#legend").draggable({ containment: "#boxLine", scroll: false });
 		
+		$(".naturalBtn").on("click",function(){
+			$("#radioNa").prop("checked", true);
+			$(".naturalBtn").css("background-color","#2992D8");
+			$(".naturalBtn").css("color","white");
+			$(".equalBtn").css("background-color","white");
+			$(".equalBtn").css("color","black");
+		});
+		$(".equalBtn").on("click",function(){
+			$("#radioEq").prop("checked", true);
+			$(".equalBtn").css("background-color","#2992D8");
+			$(".equalBtn").css("color","white");
+			$(".naturalBtn").css("background-color","white");
+			$(".naturalBtn").css("color","black");
+		});
    });
 </script>
 </head>
@@ -491,6 +517,12 @@
 			</div>
 			<div class="sideDetail">
 				<form class="dropdowns" id="dropdowns">
+					<div class="radios">
+						<button type="button" class="naturalBtn">Natural Brake</button>
+						<button type="button" class="equalBtn">등간격</button>
+						<input type="radio" name="legendType" value="na" id="radioNa" checked>
+						<input type="radio" name="legendType" value="eq" id="radioEq">
+					</div>
 				    <select id="sd" name="sd">
 				    	<option value="0" disabled selected>시/도 선택</option>
 				    	<option value="1">전체보기</option>

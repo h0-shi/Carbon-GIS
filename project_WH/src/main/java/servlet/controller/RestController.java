@@ -50,7 +50,6 @@ public class RestController {
 		Map<String, String> where = new HashMap<String, String>();
 		where.put("type", type);
 		where.put("filter", filter);
-		
 		Map<String, String> center = servletService.center(where);
 		String bBox = center.get("st_asgeojson");
 		return bBox;
@@ -88,12 +87,21 @@ public class RestController {
 		return uuid+fileRealName;//return result; 
 	}
 	
-	@PostMapping("/legend.do")
-	public List<Long> legend(String filter, String type){
+	@PostMapping("/naLegend.do")
+	public List<Long> naLegend(String filter, String type){
 		Map<String, String> where = new HashMap<String, String>();
 		where.put("filter", filter);
 		where.put("type", type);
-		String legendStr = servletService.legend(where);
+		String legendStr = servletService.naLegend(where);
+		List<Long> legend = util.getLegend(legendStr);
+		return legend;
+	}
+	@PostMapping("/eqLegend.do")
+	public List<Long> eqLegend(String filter, String type){
+		Map<String, String> where = new HashMap<String, String>();
+		where.put("filter", filter);
+		where.put("type", type);
+		String legendStr = servletService.eqLegend(where);
 		List<Long> legend = util.getLegend(legendStr);
 		return legend;
 	}
