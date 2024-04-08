@@ -127,6 +127,7 @@ $(document).ready(function(){
 				$("#usageTable tbody tr").remove();
 				removeData(count);
 				count = 0;
+				var totalUsage = 0;
 				for (var i = 0; i < result.length; i++) {
 					var td;
 					td = '<tr><td>'+result[i].usage_nm+'</td>';
@@ -134,7 +135,10 @@ $(document).ready(function(){
 					table.append(td);
 					addData(result[i].usage_nm, result[i].usage);
 					count++;
+					totalUsage += result[i].usage;
 				}
+				$(".totalUsage").text("총 배출량 : "+totalUsage.toLocaleString('kr-KR'));
+				
 			},
 			error: function(request, status, error){
 				console.log("실패");
@@ -244,7 +248,7 @@ $(document).ready(function(){
 				<div class="total">
 					<h2>탄소 배출(전기) 현황</h2>
 					<hr>
-					<h5>총 배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/></h5>
+					<h5 class="totalUsage">총 배출량 : <fmt:formatNumber value="${total }" pattern="#,###"/></h5>
 				</div>
 				<div class="graphDiv">
 					<div id="chart_div" class="chart"></div>

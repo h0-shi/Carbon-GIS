@@ -16,7 +16,6 @@ $(document).ready(function(){
 	$("#fileBtn").click(function(event){
 		event.preventDefault();
 		var form = $("#file");
-		console.log(form[0]); 
 		var fileName = $(".fileIn").val().split('\\').pop().toLowerCase();
 		var ext =  fileName.split('.').pop().toLowerCase();
 		if(ext != 'txt'){
