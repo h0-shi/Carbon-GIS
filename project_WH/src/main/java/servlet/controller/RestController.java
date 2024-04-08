@@ -36,7 +36,7 @@ public class RestController {
 	Util util;
 	
 	@PostMapping("/getDropdown.do")
-	public List<ServletVO> hover(String sd, String sggSel) throws IOException {
+	public List<ServletVO> getDropdown(String sd, String sggSel) throws IOException {
 		List<ServletVO> sgg = servletService.sgg(sd);
 		if(sggSel != null) {
 			List<ServletVO> bjd = servletService.bjd(sggSel);

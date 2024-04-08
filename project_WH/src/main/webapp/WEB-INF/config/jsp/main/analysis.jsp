@@ -203,7 +203,7 @@ $(document).ready(function(){
 			<div class="sideCategory">
 		        <ul>
 		            <li>
-		            	<a href="./hover.do">
+		            	<a href="./gisMap.do">
 		            	<img class="icon" alt="탄소공간지도" src="<c:url value='/resources/'/>/image/mapicon.png">
 		           		<br>탄소공간지도
 		           		</a>

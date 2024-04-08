@@ -30,13 +30,13 @@ public class ServletController {
 		return "main/main";
 	}
 	
-	@GetMapping("/hover.do")
+	@GetMapping("/gisMap.do")
 	@CrossOrigin(origins = "*", allowedHeaders =  "*")
 	public String hover(ModelMap model) {
 		List<ServletVO> sidonm = servletService.sidonm();
 		model.addAttribute("key",util.getKey());
 		model.addAttribute("list",sidonm);
-		return "main/hover";
+		return "main/gisMap";
 	}
 	
 }

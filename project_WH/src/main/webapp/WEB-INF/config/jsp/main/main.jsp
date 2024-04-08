@@ -101,7 +101,7 @@ $(document).ready(function(){
     	<h1 class="title">C조 탄소 지도 프로젝트</h1>
     	<span>- 백건하, 박시호, 이문희, 이진선, 신동일 -</span>
     	<br>
-    	<button onclick="location.href='./hover.do'">시작하기</button>
+    	<button onclick="location.href='./gisMap.do'">시작하기</button>
     </div>
 	<div class="bg-inner">
 	  <div class="wrap">

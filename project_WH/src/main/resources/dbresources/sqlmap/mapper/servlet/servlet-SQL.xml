@@ -15,7 +15,7 @@
 	</select>
 	
 	<select id="bjd" resultType="servletVo" parameterType="String">
-		SELECT DISTINCT bjd_nm, bjd_cd FROM public."Location_C1" WHERE sgg_nm=#{sgg } ORDER BY bjd_nm
+		SELECT DISTINCT bjd_nm, bjd_cd FROM public."Location_C1" where left(bjd_cd,5) = #{sgg } ORDER BY bjd_nm
 	</select>
 	
 	<select id="center" resultType="HashMap" parameterType="Map">
