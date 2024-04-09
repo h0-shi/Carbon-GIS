@@ -22,6 +22,7 @@ $(document).ready(function(){
 			alert("txt 파일만 첨부 가능합니다.");
 			return false;
 		}
+		
 		var formData = new FormData(form[0]);
 		
 		

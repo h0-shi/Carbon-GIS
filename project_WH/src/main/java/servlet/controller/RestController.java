@@ -61,7 +61,6 @@ public class RestController {
 		String fileRealName = mFile.getOriginalFilename();
 		String fileExtension = fileRealName.substring(fileRealName.lastIndexOf("."),fileRealName.length());
 		if(!fileExtension.equals(".txt")) {
-			System.out.println(fileExtension);
 			return "";
 		}
 		InputStreamReader isr = new InputStreamReader(mFile.getInputStream(),"UTF-8");
@@ -76,9 +75,7 @@ public class RestController {
 		} catch (Exception e) {
 			return "";
 		}
-		
 		int trunc = servletService.truncate();
-		
 		String upfile = "C:\\eGovFrameDev-3.10.0-64bit\\workspace\\Carbon-GIS\\project_WH\\src\\main\\webapp\\resources\\upload\\";
 		UUID uuid = UUID.randomUUID();
 		File saveFile = new File(upfile, uuid+fileRealName);
