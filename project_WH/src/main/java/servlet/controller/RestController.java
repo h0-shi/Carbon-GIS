@@ -76,9 +76,16 @@ public class RestController {
 			return "";
 		}
 		int trunc = servletService.truncate();
-		String upfile = "C:\\eGovFrameDev-3.10.0-64bit\\workspace\\Carbon-GIS\\project_WH\\src\\main\\webapp\\resources\\upload\\";
+		String upfile = "C:\\temp\\GisDBUp";
 		UUID uuid = UUID.randomUUID();
+		
 		File saveFile = new File(upfile, uuid+fileRealName);
+		if(!saveFile.exists()) {
+			try {
+				saveFile.mkdirs();
+			} catch (Exception e) {
+			}
+		}
 		mFile.transferTo(saveFile);
 		
 		return uuid+fileRealName;//return result; 
