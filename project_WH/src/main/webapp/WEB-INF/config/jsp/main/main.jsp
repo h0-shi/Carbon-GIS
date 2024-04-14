@@ -99,7 +99,7 @@ $(document).ready(function(){
 	    	<img alt="logo" src="<c:url value='/resources/'/>/image/logo.png">
 	    </div>
     	<h1 class="title">C조 탄소 지도 프로젝트</h1>
-    	<span>- 백건하, 박시호, 이문희, 이진선, 신동일 -</span>
+    	<span>- 백건하, 박시호, 이문희, 이진선 -</span>
     	<br>
     	<button onclick="location.href='./gisMap.do'">시작하기</button>
     </div>

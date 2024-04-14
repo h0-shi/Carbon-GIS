@@ -28,7 +28,7 @@ public class WebSocket {
 	
 	@OnMessage
 	public void onMessage(Session session, String fileName) throws IOException {
-		  String root = "C:\\temp\\GisDBUp";
+		  String root = "C:\\temp\\GisDBUp\\";
 	      FileReader reader = new FileReader(root+fileName);
 	      BufferedReader bf = new BufferedReader(reader);
 	      File f = new File(root+fileName);
@@ -63,8 +63,7 @@ public class WebSocket {
 	             pageSize = 15000;
 	          }
 	      }
-	     int refresh =  servletService.Refresh();
-	     System.out.println(refresh);
+	      servletService.Refresh();
 	      session.getBasicRemote().sendText(100+"");
 	      if(f.exists()) {
 	    	  if(f.delete()) {
