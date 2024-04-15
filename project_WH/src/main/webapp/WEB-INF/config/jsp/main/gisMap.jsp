@@ -187,11 +187,13 @@
 			map.removeLayer(colorWms);
 			colorWms = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
-					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					url :  'http://wisejia.iptime.org:8080/geoserver/hoshi/wms', // 1. 레이어 URL
+//					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 					params : {
 			               'VERSION' : '1.1.0', // 2. 버전
 			               'STYLES' : 'line ', // 2. 버전
-			               'LAYERS' : 'Project:tl_sgg', // 3. 작업공간:레이어 명
+			               'LAYERS' : 'hoshi:c1_sgg', // 3. 작업공간:레이어 명
+//			               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
 			               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
 			               'SRS' : 'EPSG:3857', // SRID
 			               'FORMAT' : "image/png", // 포맷
@@ -267,11 +269,13 @@
 			map.removeLayer(colorWms);
 			colorWms = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
-					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					url :  'http://wisejia.iptime.org:8080/geoserver/hoshi/wms', // 1. 레이어 URL
+//					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 					params : {
 			               'VERSION' : '1.1.0', // 2. 버전
 			               'STYLES' : 'line ', // 2. 버전
-			               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
+			               'LAYERS' : 'hoshi:c1_sgg', // 3. 작업공간:레이어 명
+//			               'LAYERS' : 'Project:c1_sgg', // 3. 작업공간:레이어 명
 			               'BBOX' : '1.386872E7,3906626.5,1.4428071E7,4670269.5', 
 			               'SRS' : 'EPSG:3857', // SRID
 			               'FORMAT' : "image/png", // 포맷
@@ -299,13 +303,15 @@
 				filter = bjdCD;
 				type = 'bjd';
 				cql = "bjd_nm='"+bjd+"'";
-				layer = 'Project:tl_bjd';
+				layer = 'hoshi:c1_bjd';
+//				layer = 'Project:tl_bjd';
 				bbox = '1.3873946E7,3906626.5,1.4428045E7,4670269.5';
 			} else {
 				filter = sd+' '+sgg;
 				type = 'sgg';
 				cql = "sgg_nm='"+filter+"'";
-				layer = 'Project:c1_sgg';
+				layer = 'hoshi:c1_sgg';
+//				layer = 'Project:c1_sgg';
 				bbox = '1.386872E7,3906626.5,1.4428071E7,4670269.5';
 			}
 			
@@ -313,7 +319,8 @@
 			map.removeLayer(colorWms);
 			colorWms = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
-					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					url :  'http://wisejia.iptime.org:8080/geoserver/hoshi/wms', // 1. 레이어 URL
+//					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 					params : {
 			               'VERSION' : '1.1.0', // 2. 버전
 			               'STYLES' : 'line ', // 2. 버전
@@ -376,18 +383,22 @@
 			
 			if(bjdCD != 1){
 				if(legendType == 'na'){
-					layer = 'Project:bjd_view';
+					layer = 'hoshi:bjd_view';
+//					layer = 'Project:bjd_view';
 				} else {
-					layer = 'Project:bjd_eq';
+					layer = 'hoshi:bjd_eq';
+//					layer = 'Project:bjd_eq';
 				}
 				bBox = '1.387148932991382E7,3910407.083927817,1.46800091844669E7,4666488.829376992';
 				params = 'sgg_cd:'+sggCD;
 				filter ="bjd_nm='"+bjd+"'";
 			} else if (sggCD != 1) {
 				if(legendType == 'na'){
-					layer = 'Project:bjd_view';
+					layer = 'hoshi:bjd_view';
+//					layer = 'Project:bjd_view';
 				} else {
-					layer = 'Project:bjd_eq';
+					layer = 'hoshi:bjd_eq';
+//					layer = 'Project:bjd_eq';
 				}				
 				console.log(layer);
 				bBox = '1.387148932991382E7,3910407.083927817,1.46800091844669E7,4666488.829376992';
@@ -395,9 +406,11 @@
 				filter ="";
 			} else if (sdCD != 1){
 				if(legendType == 'na'){
-					layer = 'Project:sgg_view';
+					layer = 'hoshi:sgg_view';
+//					layer = 'Project:sgg_view';
 				} else {
-					layer = 'Project:sgg_eq';
+					layer = 'hoshi:sgg_eq';
+//					layer = 'Project:sgg_eq';
 				}	
 				bBox = '1.3871489341071218E7,3910407.083927817,1.4680011171788167E7,4666488.829376997';
 				params = 'sgg_cd:'+sdCD;
@@ -406,7 +419,8 @@
 			
 			legend = new ol.layer.Tile({
 				source : new ol.source.TileWMS({
-					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
+					url :  'http://wisejia.iptime.org:8080/geoserver/hoshi/wms', // 1. 레이어 URL
+//					url :  'http://localhost:8080/geoserver/Project/wms?service=WMS', // 1. 레이어 URL
 					 params : {
 			               'VERSION' : '1.1.0', // 2. 버전
 			               'LAYERS' : layer, // 3. 작업공간:레이어 명
@@ -436,6 +450,7 @@
 			} else {
 				url = "./eqLegend.do";
 			}
+			
 			$.ajax({
 				url: url,
 				type: "post",
