@@ -96,11 +96,11 @@
 		)
 		SELECT 
 		    json_build_array(
-			    CAST(min_usage + range_size AS INTEGER),
-	    	    CAST(min_usage + range_size * 2 AS INTEGER),
-		        CAST(min_usage + range_size * 3 AS INTEGER),
-	    	    CAST(min_usage + range_size * 4 AS INTEGER),
-		        CAST(max_usage AS INTEGER)
+			    CAST(min_usage + range_size AS BIGINT),
+	    	    CAST(min_usage + range_size * 2 AS BIGINT),
+		        CAST(min_usage + range_size * 3 AS BIGINT),
+	    	    CAST(min_usage + range_size * 4 AS BIGINT),
+		        CAST(max_usage AS BIGINT)
 		    ) AS test
 		FROM usage_ranges;
 	</select>
