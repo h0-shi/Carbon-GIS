@@ -20,8 +20,8 @@ $(document).ready(function(){
 		  const width = $(window).width();
 		  const height = $(window).height();
 
-		  const moveX = (e.pageX - width / 2) / width;
-		  const moveY = (e.pageY - height / 2) / height;
+		  const moveX = (e.pageX-width/2)/width;
+		  const moveY = (e.pageY-height/2)/height;
 
 		  const backMoveX = -moveX * 30;
 		  const backMoveY = -moveY * 10;
@@ -70,7 +70,7 @@ $(document).ready(function(){
 	height: auto;
    	display: block;
 	margin: 0 auto; /* 가로 중앙 정렬 */
-	filter: drop-shadow(1px 1px white);
+	filter: drop-shadow(2px 2px black);
 }
 .content > button{
 	width: 50%;
@@ -96,10 +96,10 @@ $(document).ready(function(){
 </head>
     <div class="content">
 	    <div class="logo" >
-	    	<img alt="logo" src="<c:url value='/resources/'/>/image/logo.png">
+	    	<img alt="logo" src="<c:url value='/resources/'/>/image/mainlogo.png">
 	    </div>
-    	<h1 class="title">C조 탄소 지도 프로젝트</h1>
-    	<span>- 백건하, 박시호, 이문희, 이진선 -</span>
+    	<h1 class="title">탄소 지도 프로젝트</h1>
+    	<span>-  박시호 -</span>
     	<br>
     	<button onclick="location.href='./gisMap.do'">시작하기</button>
     </div>

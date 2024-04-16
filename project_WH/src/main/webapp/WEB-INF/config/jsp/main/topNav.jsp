@@ -18,7 +18,8 @@
     justify-content: center;
 }
 .head img{
-	width: 300px;
+	height: 35px;
+	width: auto;
 	margin: auto;
 	padding: 0; 
 	text-align: left;
@@ -27,7 +28,7 @@
 </head>
 <body>
 	<div class="head">
-        <img class="icon" alt="로고" class="logo" onclick="location.href='./main.do'" src="<c:url value='/resources/'/>/image/logo.png">
+        <img class="icon" alt="로고" class="logo" onclick="location.href='./main.do'" src="<c:url value='/resources/'/>/image/mainlogo.png">
    	</div>
 </body>
 </html>
