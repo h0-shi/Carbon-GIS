@@ -27,42 +27,46 @@ public class WebSocket {
 	private ServletImpl servletService;
 	
 	@OnMessage
-	public void onMessage(Session session, String fileName) throws IOException {
+	public void onMessage(Session session, String fileName) throws IOException {		
 		  String root = "C:\\temp\\GisDBUp\\";
+		  //txt파일 불러옴
 	      FileReader reader = new FileReader(root+fileName);
-	      BufferedReader bf = new BufferedReader(reader);
+	      BufferedReader bf = new BufferedReader(rader);
 	      File f = new File(root+fileName);
 	      long size = f.length();
-	      System.out.println(size);
-	    //  System.out.println(size+"이게 사이즈");
+		  //사이즈 확인
+	      //System.out.println(size);
 	      List<Map<String, Object>> list = new ArrayList<Map<String,Object>>();
 	      String aLine = null;
 	      long count = 0;
-	      int pageSize = 15000;
-	      //session.getBasicRemote().sendText("시작합니다");
+	      int pageSize = 15000;	    
 	      
+		  //DB 업로드 시작
 	      while((aLine = bf.readLine()) != null) {
 	         Map<String, Object> map = new HashMap<String, Object>();
-	         count += aLine.getBytes("ks_c_5601-1987").length+8;
-	         System.out.println(count+"이게 카운트");
+			 //읽어들인 byte의 총 합
+	         count += aLine.getBytes("ks_c_5601-1987").length+8;	         
 	         String[] arr = aLine.split("\\|");
 	          map.put("useDate", arr[0]);
 	          map.put("sggCD", arr[3]);
 	          map.put("bjd", arr[4]);
 	          map.put("usage", Integer.parseInt(arr[13]));
+			  //map list에 저장
 	          list.add(map);
 	          if(--pageSize <= 0 ) {
-	        	 //System.out.println("초기화");
+				 //DB Insert				
 	             int result = servletService.dbInsert(list);
+				 // list 초기화
 	             list.clear();
+				 //진행률 업데이트
 	             long perc = (count*100)/size;
-	             //System.out.println(perc+"이게 퍼센트");
-	             session.getBasicRemote().sendText(perc+"");
-	             //System.out.println(count+"/"+size);
-	             //System.out.println(perc);
+				 //프론트로 진행률 전송
+	             session.getBasicRemote().sendText(perc+"");	             
+	             //페이지 사이즈 재설정
 	             pageSize = 15000;
 	          }
 	      }
+		  //Materialized view Refresh
 	      servletService.Refresh();
 	      session.getBasicRemote().sendText(100+"");
 	      if(f.exists()) {
