@@ -55,6 +55,7 @@ public class RestController {
 		return bBox;
 	}
 	
+	//txt파일 서버 전송
 	@PostMapping("/dbInsert.do")
 	public String dbInsert(MultipartHttpServletRequest request) throws IOException {
 		MultipartFile mFile = request.getFile("file");
